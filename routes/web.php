@@ -22,6 +22,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/course/{id}', [CourseController::class, 'show'])->name('course.show');
 Route::post('/course/{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
+Route::get('/article/{id}', [HomeController::class, 'showArticle'])->name('article.show');
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {

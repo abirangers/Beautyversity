@@ -22,7 +22,7 @@ class ArticleSeeder extends Seeder
                 'author' => 'Jane Smith',
             ]
         );
-        
+
         \App\Models\Article::updateOrCreate(
             ['title' => 'Understanding PHP Security Best Practices'],
             [

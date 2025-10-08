@@ -13,4 +13,11 @@ class HomeController extends Controller
 
         return view('home', compact('courses', 'articles'));
     }
+    
+    public function showArticle($id)
+    {
+        $article = \App\Models\Article::findOrFail($id);
+        
+        return view('article.show', compact('article'));
+    }
 }
