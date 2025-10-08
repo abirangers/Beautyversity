@@ -29,7 +29,7 @@
                         @endif
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">{{ $course->title }}</h3>
+                        <h3 class="text-xl font-bold mb-2 line-clamp-2">{{ $course->title }}</h3>
                         <p class="text-gray-600 mb-2">Instruktur: {{ $course->instructor }}</p>
                         <p class="text-lg font-bold text-blue-600 mb-4">Rp {{ number_format($course->price, 0, ',', '.') }}</p>
                         <a href="{{ route('course.show', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300 block text-center">
@@ -61,7 +61,7 @@
                         @endif
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">{{ $article->title }}</h3>
+                        <h3 class="text-xl font-bold mb-2 line-clamp-2">{{ $article->title }}</h3>
                         <p class="text-gray-600 mb-4">Oleh: {{ $article->author }}</p>
                         <a href="#" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300 block text-center">
                             Baca Selengkapnya

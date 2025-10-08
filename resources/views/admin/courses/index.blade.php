@@ -31,8 +31,8 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($courses as $course)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $course->title }}</div>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900 line-clamp-2 max-w-xs">{{ $course->title }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">{{ $course->instructor }}</div>
