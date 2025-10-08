@@ -102,8 +102,11 @@
                     @enderror
                 </div>
             
-            <div class="mt-6">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <div class="mt-6 flex justify-between">
+                <a href="{{ route('admin.lessons.index') }}?course_id={{ $course->id }}" class="bg-primary-600 text-white px-6 py-3 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                    Manage Lessons for this Course
+                </a>
+                <button type="submit" class="bg-primary-600 text-white px-6 py-3 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                     Update Course
                 </button>
             </div>

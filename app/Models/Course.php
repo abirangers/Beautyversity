@@ -42,4 +42,12 @@ class Course extends Model
     {
         return $this->hasMany(\App\Models\Enrollment::class);
     }
+
+    /**
+     * Get the lessons for this course
+     */
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class)->orderBy('order');
+    }
 }

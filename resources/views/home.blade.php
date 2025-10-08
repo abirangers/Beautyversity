@@ -4,11 +4,11 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="bg-gradient-to-r from-indigo-60 to-purple-700 text-white py-20">
+<section class="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20">
     <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-4">Belajar Lebih Mudah dengan Kelas Digital</h2>
+        <h2 class="text-4xl font-bold mb-4">Belajar Lebih Mudah dengan Beautyversity</h2>
         <p class="text-xl mb-8">Akses berbagai kelas berkualitas dari instruktur terbaik di bidangnya. Belajar kapan saja, di mana saja.</p>
-        <a href="#courses" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+        <a href="#courses" class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
             Lihat Kelas
         </a>
     </div>
@@ -31,8 +31,8 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-2 line-clamp-2">{{ $course->title }}</h3>
                         <p class="text-gray-600 mb-2">Instruktur: {{ $course->instructor }}</p>
-                        <p class="text-lg font-bold text-blue-600 mb-4">Rp {{ number_format($course->price, 0, ',', '.') }}</p>
-                        <a href="{{ route('course.show', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300 block text-center">
+                        <p class="text-lg font-bold text-primary-60 mb-4">Rp {{ number_format($course->price, 0, ',', '.') }}</p>
+                        <a href="{{ route('course.show', $course->id) }}" class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition duration-300 block text-center">
                             Lihat Detail
                         </a>
                     </div>
@@ -63,7 +63,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-2 line-clamp-2">{{ $article->title }}</h3>
                         <p class="text-gray-600 mb-4">Oleh: {{ $article->author }}</p>
-                        <a href="#" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300 block text-center">
+                        <a href="#" class="bg-secondary-500 text-white px-4 py-2 rounded-md hover:bg-secondary-600 transition duration-300 block text-center">
                             Baca Selengkapnya
                         </a>
                     </div>

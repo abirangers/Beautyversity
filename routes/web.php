@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -33,6 +34,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     Route::middleware('admin')->name('admin.')->group(function () {
         Route::resource('courses', AdminCourseController::class);
+        Route::resource('lessons', AdminLessonController::class);
         Route::resource('users', AdminUserController::class);
         Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments.index');
         Route::post('payments/approve/{id}', [AdminPaymentController::class, 'approve'])->name('payments.approve');

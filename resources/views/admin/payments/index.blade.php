@@ -19,7 +19,7 @@
         <h2 class="text-2xl font-bold mb-4">Pending Payments</h2>
         
         @if($pendingEnrollments->count() > 0)
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="bg-white shadow-md rounded-lg overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -69,7 +69,7 @@
     <div>
         <h2 class="text-2xl font-bold mb-4">All Payments</h2>
         
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="bg-white shadow-md rounded-lg overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>

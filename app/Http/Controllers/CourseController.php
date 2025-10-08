@@ -10,7 +10,10 @@ class CourseController extends Controller
 {
     public function show($id)
     {
-        $course = \App\Models\Course::findOrFail($id);
+        $course = \App\Models\Course::with(['lessons' => function($query) {
+            $query->orderBy('module')->orderBy('order');
+        }])->findOrFail($id);
+        
         $user = Auth::user();
         
         $userHasAccess = false;
@@ -24,7 +27,16 @@ class CourseController extends Controller
             $userHasAccess = $userEnrollment && $userEnrollment->payment_status === 'completed';
         }
         
-        return view('course.show', compact('course', 'userHasAccess', 'userEnrollment'));
+        // Group lessons by module
+        $lessonsByModule = $course->lessons->groupBy('module');
+        
+        // Calculate total videos
+        $totalVideos = $course->lessons->count();
+        
+        // Calculate enrolled students count
+        $enrolledStudentsCount = $course->enrollments()->where('payment_status', 'completed')->count();
+        
+        return view('course.show', compact('course', 'userHasAccess', 'userEnrollment', 'lessonsByModule', 'totalVideos', 'enrolledStudentsCount'));
     }
     
     public function enroll($id)

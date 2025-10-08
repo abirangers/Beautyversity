@@ -10,6 +10,9 @@
             <a href="{{ route('admin.courses.edit', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2">
                 Edit Course
             </a>
+            <a href="{{ route('admin.lessons.index') }}?course_id={{ $course->id }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 mr-2">
+                Manage Lessons
+            </a>
             <a href="{{ route('admin.courses.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
                 Back to Courses
             </a>

@@ -7,7 +7,7 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">Edit Article</h1>
         <div>
-            <a href="{{ route('admin.articles.show', $article->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2">
+            <a href="{{ route('admin.articles.show', $article->id) }}" class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 mr-2">
                 View Article
             </a>
             <a href="{{ route('admin.articles.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
