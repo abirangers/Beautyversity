@@ -3,114 +3,151 @@
 @section('title', 'Edit Course')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Edit Course</h1>
-        <a href="{{ route('admin.courses.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-            Back to Courses
-        </a>
-    </div>
 
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <form action="{{ route('admin.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="col-span-2">
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
-                    <input type="text" name="title" id="title" value="{{ old('title', $course->title) }}" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('title')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="instructor" class="block text-sm font-medium text-gray-700 mb-1">Instructor</label>
-                    <input type="text" name="instructor" id="instructor" value="{{ old('instructor', $course->instructor) }}" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('instructor')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (Rp)</label>
-                    <input type="number" name="price" id="price" value="{{ old('price', $course->price) }}" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('price')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                    <input type="text" name="category" id="category" value="{{ old('category', $course->category) }}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('category')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="level" class="block text-sm font-medium text-gray-700 mb-1">Level</label>
-                    <select name="level" id="level" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="Beginner" {{ old('level', $course->level) == 'Beginner' ? 'selected' : '' }}>Beginner</option>
-                        <option value="Intermediate" {{ old('level', $course->level) == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
-                        <option value="Advanced" {{ old('level', $course->level) == 'Advanced' ? 'selected' : '' }}>Advanced</option>
-                    </select>
-                    @error('level')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="col-span-2">
-                    <label for="trailer_video_id" class="block text-sm font-medium text-gray-700 mb-1">Trailer Video ID (YouTube)</label>
-                    <input type="text" name="trailer_video_id" id="trailer_video_id" value="{{ old('trailer_video_id', $course->trailer_video_id) }}" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('trailer_video_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="col-span-2">
-                    <label for="full_video_ids" class="block text-sm font-medium text-gray-700 mb-1">Full Video IDs (comma separated)</label>
-                    <input type="text" name="full_video_ids" id="full_video_ids" value="{{ old('full_video_ids', implode(',', json_decode($course->full_video_ids, true) ?? [])) }}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('full_video_ids')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="col-span-2">
-                    <label for="thumbnail" class="block text-sm font-medium text-gray-700 mb-1">Thumbnail (Leave blank to keep current)</label>
-                    <input type="file" name="thumbnail" id="thumbnail"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @error('thumbnail')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div class="col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea name="description" id="description" rows="5" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('description', $course->description) }}</textarea>
-                    @error('description')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            
-            <div class="mt-6 flex justify-between">
-                <a href="{{ route('admin.lessons.index') }}?course_id={{ $course->id }}" class="bg-primary-600 text-white px-6 py-3 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
-                    Manage Lessons for this Course
+    <form action="{{ route('admin.courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
+            <div>
+                <a href="{{ route('admin.courses.index') }}"
+                    class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Courses
                 </a>
-                <button type="submit" class="bg-primary-600 text-white px-6 py-3 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+            </div>
+            <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                <a href="{{ route('admin.lessons.index') }}?course_id={{ $course->id }}"
+                    class="inline-flex items-center justify-center px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold text-sm rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-300">
+                    Manage Lessons
+                </a>
+                <button type="submit"
+                    class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors duration-300">
                     Update Course
                 </button>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm">
+            <div class="p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div class="md:col-span-2">
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Course Title</label>
+                        <input type="text" name="title" id="title" value="{{ old('title', $course->title) }}"
+                            required
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('title')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="instructor" class="block text-sm font-medium text-gray-700 mb-2">Instructor</label>
+                        <input type="text" name="instructor" id="instructor"
+                            value="{{ old('instructor', $course->instructor) }}" required
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('instructor')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (Rp)</label>
+                        <input type="number" name="price" id="price" value="{{ old('price', $course->price) }}"
+                            required
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('price')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <input type="text" name="category" id="category"
+                            value="{{ old('category', $course->category) }}"
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('category')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="level" class="block text-sm font-medium text-gray-700 mb-2">Level</label>
+                        <select name="level" id="level" required
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            <option value="Beginner" {{ old('level', $course->level) == 'Beginner' ? 'selected' : '' }}>
+                                Beginner</option>
+                            <option value="Intermediate"
+                                {{ old('level', $course->level) == 'Intermediate' ? 'selected' : '' }}>Intermediate
+                            </option>
+                            <option value="Advanced" {{ old('level', $course->level) == 'Advanced' ? 'selected' : '' }}>
+                                Advanced</option>
+                        </select>
+                        @error('level')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="trailer_video_id" class="block text-sm font-medium text-gray-700 mb-2">Trailer Video ID
+                            (YouTube)</label>
+                        <input type="text" name="trailer_video_id" id="trailer_video_id"
+                            value="{{ old('trailer_video_id', $course->trailer_video_id) }}" required
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('trailer_video_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="full_video_ids" class="block text-sm font-medium text-gray-700 mb-2">Full Video
+                            IDs</label>
+                        <input type="text" name="full_video_ids" id="full_video_ids"
+                            value="{{ old('full_video_ids', implode(',', json_decode($course->full_video_ids, true) ?? [])) }}"
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        <p class="mt-2 text-xs text-gray-500">Enter YouTube video IDs separated by a comma (e.g., abcde123,
+                            fghij456).</p>
+                        @error('full_video_ids')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="thumbnail" class="block text-sm font-medium text-gray-700 mb-2">Thumbnail</label>
+                        <div class="flex items-center space-x-6">
+                            @if ($course->thumbnail)
+                                <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Current Thumbnail"
+                                    class="h-16 w-16 object-cover rounded-lg">
+                            @endif
+                            <input type="file" name="thumbnail" id="thumbnail"
+                                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">Leave blank to keep the current thumbnail.</p>
+                        @error('thumbnail')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea name="description" id="description" rows="6" required
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">{{ old('description', $course->description) }}</textarea>
+                        @error('description')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 md:px-8 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg flex justify-end">
+                <button type="submit"
+                    class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors duration-300">
+                    Update Course
+                </button>
+            </div>
+        </div>
+    </form>
+
 @endsection

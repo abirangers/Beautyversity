@@ -3,80 +3,96 @@
 @section('title', 'View Course')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">View Course</h1>
+
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
         <div>
-            <a href="{{ route('admin.courses.edit', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2">
-                Edit Course
+            <a href="{{ route('admin.courses.index') }}"
+                class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                    </path>
+                </svg>
+                Back to Courses
             </a>
-            <a href="{{ route('admin.lessons.index') }}?course_id={{ $course->id }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 mr-2">
+        </div>
+        <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+            <a href="{{ route('admin.lessons.index') }}?course_id={{ $course->id }}"
+                class="inline-flex items-center justify-center px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold text-sm rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-300">
                 Manage Lessons
             </a>
-            <a href="{{ route('admin.courses.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-                Back to Courses
+            <a href="{{ route('admin.courses.edit', $course->id) }}"
+                class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors duration-300">
+                Edit Course
             </a>
         </div>
     </div>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h2 class="text-2xl font-bold mb-4">{{ $course->title }}</h2>
-                    <p class="text-gray-600 mb-2"><strong>Instructor:</strong> {{ $course->instructor }}</p>
-                    <p class="text-gray-600 mb-2"><strong>Price:</strong> Rp {{ number_format($course->price, 0, ',', '.') }}</p>
-                    <p class="text-gray-600 mb-2"><strong>Category:</strong> {{ $course->category ?? 'N/A' }}</p>
-                    <p class="text-gray-600 mb-2"><strong>Level:</strong> 
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                            {{ $course->level }}
-                        </span>
-                    </p>
-                </div>
-                
-                <div>
-                    @if($course->thumbnail && $course->thumbnail != 'default-course.jpg')
-                        <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}" class="w-full h-48 object-cover rounded-md">
+    <div class="bg-white rounded-lg shadow-sm">
+        <div class="p-6 md:p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1">
+                    @if ($course->thumbnail && $course->thumbnail != 'default-course.jpg')
+                        <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}"
+                            class="w-full object-cover rounded-lg shadow-md mb-6">
                     @else
-                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
-                            <span class="text-gray-500">No Thumbnail</span>
+                        <div
+                            class="bg-gray-100 border-2 border-dashed rounded-lg w-full aspect-video flex items-center justify-center mb-6">
+                            <span class="text-gray-500 text-sm">No Thumbnail</span>
                         </div>
                     @endif
-                </div>
-            </div>
-            
-            <div class="mt-6">
-                <h3 class="text-xl font-bold mb-2">Description</h3>
-                <p class="text-gray-700">{{ $course->description }}</p>
-            </div>
-            
-            <div class="mt-6">
-                <h3 class="text-xl font-bold mb-2">Videos</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="font-medium mb-1">Trailer Video ID:</h4>
-                        <p class="text-gray-700">{{ $course->trailer_video_id }}</p>
-                    </div>
-                    <div>
-                        <h4 class="font-medium mb-1">Full Video IDs:</h4>
-                        <p class="text-gray-700">
-                            @if($course->full_video_ids)
+
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Video Details</h3>
+                    <dl class="space-y-3">
+                        <div class="text-sm">
+                            <dt class="font-medium text-gray-500">Trailer Video ID</dt>
+                            <dd class="text-gray-900 mt-1">{{ $course->trailer_video_id }}</dd>
+                        </div>
+                        <div class="text-sm">
+                            <dt class="font-medium text-gray-500">Full Video IDs</dt>
+                            <dd class="text-gray-900 mt-1 break-words">
                                 @php
                                     $videoIds = json_decode($course->full_video_ids, true) ?? [];
                                 @endphp
-                                @if(count($videoIds) > 0)
-                                    {{ implode(', ', $videoIds) }}
-                                @else
-                                    N/A
-                                @endif
-                            @else
-                                N/A
-                            @endif
-                        </p>
+                                {{ count($videoIds) > 0 ? implode(', ', $videoIds) : 'N/A' }}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $course->title }}</h1>
+
+                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
+                        <div>
+                            <dt class="font-medium text-gray-500">Instructor</dt>
+                            <dd class="text-gray-900 mt-1">{{ $course->instructor }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Price</dt>
+                            <dd class="text-gray-900 mt-1">Rp {{ number_format($course->price, 0, ',', '.') }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Category</dt>
+                            <dd class="text-gray-900 mt-1">{{ $course->category ?? 'N/A' }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Level</dt>
+                            <dd class="mt-1">
+                                <span
+                                    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800">
+                                    {{ $course->level }}
+                                </span>
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 border-b pb-2">Description</h3>
+                    <div class="prose prose-sm max-w-none text-gray-700">
+                        <p>{{ $course->description }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
 @endsection
