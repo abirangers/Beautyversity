@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Enrollment;
+
+class CourseController extends Controller
+{
+    public function show($id)
+    {
+        $course = \App\Models\Course::findOrFail($id);
+        $user = Auth::user();
+        
+        $userHasAccess = false;
+        $userEnrollment = null;
+        
+        if ($user) {
+            $userEnrollment = $user->enrollments()
+                ->where('course_id', $course->id)
+                ->first();
+            
+            $userHasAccess = $userEnrollment && $userEnrollment->payment_status === 'completed';
+        }
+        
+        return view('course.show', compact('course', 'userHasAccess', 'userEnrollment'));
+    }
+    
+    public function enroll($id)
+    {
+        $course = \App\Models\Course::findOrFail($id);
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
+        }
+        
+        // Check if user already has enrollment (regardless of status)
+        $existingEnrollment = $user->enrollments()
+            ->where('course_id', $course->id)
+            ->first();
+        
+        if ($existingEnrollment) {
+            return redirect()->back()->with('message', 'Anda sudah mendaftar kelas ini. Silakan tunggu verifikasi pembayaran.');
+        }
+        
+        // Create enrollment record
+        $enrollment = \App\Models\Enrollment::create([
+            'user_id' => $user->id,
+            'course_id' => $course->id,
+            'status' => 'pending',
+            'enrolled_at' => now(),
+            'payment_status' => 'pending',
+            'payment_method' => 'manual_transfer',
+            'payment_proof' => null
+        ]);
+        
+        return redirect()->back()->with('message', 'Pendaftaran kelas berhasil! Silakan lakukan pembayaran sesuai instruksi yang akan dikirimkan.');
+    }
+}
