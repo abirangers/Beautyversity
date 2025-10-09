@@ -77,8 +77,16 @@
                                 class="w-full h-48 object-cover">
                         </a>
                         <div class="p-6">
+                            @if ($article->category)
+                                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block">
+                                    {{ $article->category }}
+                                </span>
+                            @endif
                             <p class="text-sm text-gray-500 mb-2">{{ $article->created_at->format('F j, Y') }}</p>
                             <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">{{ $article->title }}</h3>
+                            @if ($article->excerpt)
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $article->excerpt }}</p>
+                            @endif
                             <a href="{{ route('article.show', $article) }}"
                                 class="font-semibold text-primary-600 hover:underline">Baca Selengkapnya</a>
                         </div>

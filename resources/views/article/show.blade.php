@@ -11,9 +11,11 @@
                     {{ $article->category }}
                 </a>
             @endif
-            <a href="#" class="text-sm font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block">
-                BeautyLife
-            </a>
+            @if (!empty($article->post_type) && $article->post_type !== 'post')
+                <a href="#" class="text-sm font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block ml-2">
+                    {{ ucfirst($article->post_type) }}
+                </a>
+            @endif
 
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                 {{ $article->title }}
@@ -36,60 +38,12 @@
             @endif
 
             <div class="prose prose-lg max-w-none text-gray-800">
-                <p>Pernahkah Anda merasa lelah menghadapi hujan sepanjang hari, dengan kulit dan rambut yang seolah
-                    kehilangan energi? Di Oktober 2025, musim hujan membawa tantangan untuk menjaga kecantikan alami.
-                    Pendekatan holistik, yang menyeimbangkan perawatan luar dan dalam, adalah jawaban untuk tetap glowing.
-                </p>
-                <p>Bayangkan wajah cerah dan rambut berkilau meski genangan air mengintai di setiap sudut kota. Dengan bahan
-                    lokal Indonesia seperti jambu biji dan teh hijau, Anda bisa merangkul kecantikan yang sehat dan
-                    berkelanjutan. Saya akan memandu Anda melalui gaya hidup holistik untuk musim hujan, menggabungkan
-                    nutrisi dan perawatan sederhana.</p>
-
-                <aside class="!my-8 pl-4 border-l-4 border-primary-400">
-                    <p class="text-gray-800"><strong>Baca Juga:</strong> <a href="#"
-                            class="text-primary-600 hover:underline font-semibold">Gaya Hidup Skinimalisme untuk Kulit
-                            Sehat</a></p>
-                </aside>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Seimbangkan Nutrisi dan Skincare</h2>
-                <p>Kecantikan holistik dimulai dari dalam. Konsumsi buah lokal seperti jambu biji, yang kaya vitamin C,
-                    untuk mendukung regenerasi kulit dan rambut. Penelitian di <em>Nutrients [2023]</em> menunjukkan bahwa
-                    vitamin C meningkatkan produksi kolagen hingga 15%. Tambahkan segelas jus jambu biji ke rutinitas harian
-                    Anda untuk kilau alami.</p>
-                <p>Selain itu, tidur cukup adalah kunci. Tidur 7-8 jam membantu tubuh memperbaiki sel kulit yang rusak
-                    akibat polusi musim hujan. Bayangkan ini seperti mengisi ulang energi untuk wajah dan rambut Anda,
-                    membuatnya siap menghadapi hari.</p>
-                <p>Untuk perawatan luar, gunakan pembersih berbasis teh hijau lokal untuk melawan polusi, diikuti pelembap
-                    ringan dengan lidah buaya. Produk ini, banyak diproduksi UMKM Indonesia, menjaga kulit tetap terhidrasi
-                    tanpa menyumbat pori di udara lembap.</p>
-
-                <aside class="!my-8 pl-4 border-l-4 border-primary-400">
-                    <p class="text-gray-800"><strong>Baca Juga:</strong> <a href="#"
-                            class="text-primary-600 hover:underline font-semibold">5 Gaya Hidup untuk Kulit Glowing di
-                            Tengah Kota</a></p>
-                </aside>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Konsistensi untuk Hasil Nyata</h2>
-                <p>Pendekatan holistik tidak memerlukan langkah rumit, tetapi konsistensi adalah rahasianya. Kombinasikan
-                    nutrisi seimbang dengan <em>skincare</em> minimalis, seperti serum temulawak untuk mencerahkan kulit.
-                    BPOM [2025] menegaskan bahwa produk alami terdaftar aman untuk penggunaan harian, asal disimpan dengan
-                    benar.</p>
-                <p>Cobalah luangkan waktu untuk relaksasi, seperti menyeruput teh herbal lokal di sore hari, untuk
-                    mengurangi stres yang memengaruhi kulit. Dengan cara ini, Anda tidak hanya merawat tubuh, tetapi juga
-                    jiwa.</p>
-                <p>Musim hujan jadi momen untuk merayakan kecantikan holistik, dengan bahan lokal yang membuat Anda bersinar
-                    dari dalam dan luar.</p>
-
-                <footer class="mt-10 pt-6 border-t border-gray-200 text-sm text-gray-600">
-                    <p>[[Rudi Tenggarawan/TBV]]</p>
-                    <div class="mt-4">
-                        <p class="font-bold text-gray-800">Sumber Eksternal:</p>
-                        <ul class="list-disc list-inside pl-2 mt-2 space-y-1">
-                            <li>BPOM: Panduan Kosmetik Aman</li>
-                            <li><em>Nutrients</em> [2023], “Vitamin C and Skin Health”</li>
-                        </ul>
+                @if (!empty($article->excerpt))
+                    <div class="mb-6">
+                        <p class="text-lg font-semibold text-gray-700 italic">{{ $article->excerpt }}</p>
                     </div>
-                </footer>
+                @endif
+                {!! $article->processed_content !!}
             </div>
 
             <div class="mt-12 pt-8 border-t border-gray-200">

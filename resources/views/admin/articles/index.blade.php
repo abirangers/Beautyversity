@@ -32,6 +32,10 @@
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Author</th>
                         <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Category</th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Post Type</th>
+                        <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Published
                         </th>
                         <th scope="col"
@@ -47,6 +51,12 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->author }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-700">{{ $article->category ?? 'N/A' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-700">{{ $article->post_type ?? 'post' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->created_at->format('d M Y') }}</div>
@@ -67,7 +77,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-sm text-gray-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500">
                                 No articles found. Click "Add New Article" to get started.
                             </td>
                         </tr>

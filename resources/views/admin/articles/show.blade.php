@@ -37,10 +37,37 @@
                     <span class="mx-2">&bull;</span>
                     Published on {{ $article->created_at->format('F d, Y') }}
                 </p>
+                <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                    @if($article->category)
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold">Category:</span>
+                            <span>{{ $article->category }}</span>
+                        </div>
+                    @endif
+                    @if($article->post_type)
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold">Post Type:</span>
+                            <span>{{ $article->post_type }}</span>
+                        </div>
+                    @endif
+                </div>
+                @if($article->tags)
+                    <div class="mt-2">
+                        <span class="font-bold">Tags:</span>
+                        <span>{{ $article->tags }}</span>
+                    </div>
+                @endif
             </div>
 
+            @if($article->excerpt)
+                <div class="my-6 p-4 bg-gray-100 rounded-lg">
+                    <h3 class="font-bold text-gray-700 mb-2">Ringkasan Artikel</h3>
+                    <p class="text-gray-700 italic">{{ $article->excerpt }}</p>
+                </div>
+            @endif
+
             <div class="prose prose-lg max-w-none text-gray-800">
-                {!! nl2br(e($article->content)) !!}
+                {!! $article->processed_content !!}
             </div>
         </div>
     </div>
