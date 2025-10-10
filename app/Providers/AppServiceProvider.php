@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View; // Tambahkan ini
+use App\Http\View\Composers\CategoryComposer; // Tambahkan ini
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Daftarkan composer untuk layout app
+        View::composer('layouts.app', CategoryComposer::class);
     }
 }

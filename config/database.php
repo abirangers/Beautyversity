@@ -113,6 +113,21 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'wordpress' => [
+            'driver' => 'mysql',
+            'host' => env('WORDPRESS_DB_HOST', '127.0.1'),
+            'port' => env('WORDPRESS_DB_PORT', '3306'),
+            'database' => env('WORDPRESS_DB_DATABASE', 'forge'),
+            'username' => env('WORDPRESS_DB_USERNAME', 'forge'),
+            'password' => env('WORDPRESS_DB_PASSWORD', ''),
+            'unix_socket' => env('WORDPRESS_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => env('WORDPRESS_TABLE_PREFIX', 'wp_'),
+            'strict' => true,
+            'engine' => null,
+        ],
+
     ],
 
     /*

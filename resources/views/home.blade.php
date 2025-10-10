@@ -3,77 +3,78 @@
 @section('title', 'Kelas Digital - Platform Belajar Online')
 
 @section('content')
-<!-- Hero Section -->
-<section class="bg-gradient-to-r from-indigo-60 to-purple-700 text-white py-20">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-4">Belajar Lebih Mudah dengan Kelas Digital</h2>
-        <p class="text-xl mb-8">Akses berbagai kelas berkualitas dari instruktur terbaik di bidangnya. Belajar kapan saja, di mana saja.</p>
-        <a href="#courses" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
-            Lihat Kelas
-        </a>
-    </div>
-</section>
-
-<!-- Featured Courses Section -->
-<section id="courses" class="py-16 bg-gray-100">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12">Kelas Pilihan</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @forelse($courses as $course)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <div class="h-48 bg-gray-200 flex items-center justify-center">
-                        @if($course->thumbnail && $course->thumbnail != 'default-course.jpg')
-                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}" class="w-full h-full object-cover">
-                        @else
-                            <div class="text-gray-500">No Image</div>
-                        @endif
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">{{ $course->title }}</h3>
-                        <p class="text-gray-600 mb-2">Instruktur: {{ $course->instructor }}</p>
-                        <p class="text-lg font-bold text-blue-600 mb-4">Rp {{ number_format($course->price, 0, ',', '.') }}</p>
-                        <a href="{{ route('course.show', $course->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300 block text-center">
-                            Lihat Detail
-                        </a>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-full text-center py-8">
-                    <p class="text-gray-600">Belum ada kelas tersedia. Silakan cek kembali nanti.</p>
-                </div>
-            @endforelse
+    <section id="hero"
+        class="relative bg-primary-500 text-center py-20 md:py-32 flex items-center justify-center min-h-screen max-h-[1000px] h-auto"
+        style="background: linear-gradient(rgba(230, 180, 184, 0.8), rgba(230, 180, 184, 0.8)), url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop') no-repeat center center; background-size: cover;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                Tingkatkan Skill, Wujudkan Karir Impianmu
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-white opacity-90">
+                Kelas Digital menyediakan kursus online terbaik di bidang teknologi dan kreatif untuk membantumu
+                mencapai tujuan.
+            </p>
+            <div class="mt-8">
+                <a href="#"
+                    class="px-8 py-3 text-lg font-semibold text-primary-600 bg-white rounded-md hover:bg-gray-100 transition-transform transform hover:scale-105">
+                    Lihat Semua Kelas
+                </a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+    <section id="popular-courses" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-sm font-bold uppercase tracking-widest text-primary-600">Rekomendasi Kami</h2>
+                <p class="mt-2 text-3xl md:text-4xl font-bold text-gray-900">
+                    Kelas Paling Populer
+                </p>
+            </div>
 
-<!-- Articles Section -->
-<section class="py-16">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12">Artikel Terbaru</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @forelse($articles as $article)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <div class="h-48 bg-gray-200 flex items-center justify-center">
-                        @if($article->thumbnail && $article->thumbnail != 'default-article.jpg')
-                            <img src="{{ asset('storage/' . $article->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-full object-cover">
-                        @else
-                            <div class="text-gray-500">No Image</div>
-                        @endif
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">{{ $article->title }}</h3>
-                        <p class="text-gray-600 mb-4">Oleh: {{ $article->author }}</p>
-                        <a href="#" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300 block text-center">
-                            Baca Selengkapnya
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                @forelse ($courses as $course)
+                    <div
+                        class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+                        <a href="{{ route('course.show', $course) }}">
+                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}"
+                                class="w-full h-48 object-cover">
                         </a>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{{ $course->title }}</h3>
+                            <p class="text-gray-600 text-sm mb-4">
+                                {{ Str::limit($course->description, 100) }}
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="text-lg font-bold text-primary-600">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
+                                <a href="{{ route('course.show', $course) }}"
+                                    class="text-sm font-semibold text-primary-600 hover:underline">
+                                    Lihat Detail
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            @empty
-                <div class="col-span-full text-center py-8">
-                    <p class="text-gray-600">Belum ada artikel tersedia. Silakan cek kembali nanti.</p>
-                </div>
-            @endforelse
+                @empty
+                    <p class="col-span-3 text-center text-gray-500">Belum ada kelas yang tersedia.</p>
+                @endforelse
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+    <section id="latest-articles" class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-sm font-bold uppercase tracking-widest text-primary-600">Artikel Terbaru</h2>
+                <p class="mt-2 text-3xl md:text-4xl font-bold text-gray-90">
+                    Wawasan & Inspirasi
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @if ($articles->isEmpty())
+                    <p class="col-span-3 text-center text-gray-500">Belum ada artikel yang tersedia.</p>
+                @else
+                    @include('article.partials.articles', ['articles' => $articles])
+                @endif
+            </div>
+
+    </section>
 @endsection

@@ -32,8 +32,12 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'author' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'tags' => 'nullable|string',
+            'excerpt' => 'nullable|string',
+            'post_type' => 'nullable|string|max:255',
         ]);
 
         $thumbnail = 'default-article.jpg';
@@ -46,6 +50,10 @@ class ArticleController extends Controller
             'content' => $request->content,
             'thumbnail' => $thumbnail,
             'author' => $request->author,
+            'category' => $request->category,
+            'tags' => $request->tags,
+            'excerpt' => $request->excerpt,
+            'post_type' => $request->post_type,
         ]);
 
         return redirect()->route('admin.articles.index')->with('success', 'Article created successfully.');
@@ -77,8 +85,12 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'author' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'tags' => 'nullable|string',
+            'excerpt' => 'nullable|string',
+            'post_type' => 'nullable|string|max:255',
         ]);
 
         $article = \App\Models\Article::findOrFail($id);
@@ -87,6 +99,10 @@ class ArticleController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'author' => $request->author,
+            'category' => $request->category,
+            'tags' => $request->tags,
+            'excerpt' => $request->excerpt,
+            'post_type' => $request->post_type,
         ];
 
         if ($request->hasFile('thumbnail')) {
