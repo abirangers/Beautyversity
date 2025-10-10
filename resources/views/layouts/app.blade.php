@@ -85,7 +85,8 @@
                                 <i class="fas fa-search h-5 w-5"></i>
                             </button>
                             @auth
-                                <a href="{{ url('/dashboard') }}"
+                            <!-- kalo admin ke /admin, kalo user ke /dashboard -->
+                                <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}"
                                     class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Dashboard</a>
                             @else
                                 {{-- <a href="{{ route('login') }}"
