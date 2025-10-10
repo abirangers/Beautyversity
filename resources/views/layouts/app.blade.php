@@ -10,8 +10,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -20,7 +21,7 @@
 
 <body class="font-sans antialiased bg-gray-50 text-gray-800">
     <div class="min-h-screen flex flex-col">
-        
+
         <header>
             <!-- Top Bar -->
             <div class="bg-gray-800 text-white text-sm">
@@ -30,7 +31,8 @@
                         <span>Bandung - Jawa Barat, Indonesia</span>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-primary-400 transition"><i
+                                class="fab fa-facebook-f"></i></a>
                         <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-youtube"></i></a>
@@ -59,14 +61,22 @@
                         </div>
 
                         <!-- Desktop Navigation Links -->
-                        <div class="hidden md:flex md:items-center md:space-x-8">
-                            @if(isset($articleCategories))
-                                @foreach($articleCategories as $category)
-                                    <a href="#" class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
-                                        {{ $category }}
-                                    </a>
-                                @endforeach
-                            @endif
+                        <div class="hidden md:flex md:flex-col md:items-center md:space-y-2">
+
+                            <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-1">
+                                <a href="{{ route('home') }}"
+                                    class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
+                                    Home
+                                </a>
+                                @if (isset($articleCategories))
+                                    @foreach ($articleCategories as $category)
+                                        <a href="{{ route('article.category', $category) }}"
+                                            class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition whitespace-nowrap">
+                                            {{ $category }}
+                                        </a>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
 
                         <!-- Search and Auth Links -->
@@ -75,10 +85,14 @@
                                 <i class="fas fa-search h-5 w-5"></i>
                             </button>
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Dashboard</a>
+                                <a href="{{ url('/dashboard') }}"
+                                    class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Dashboard</a>
                             @else
-                                <a href="{{ route('login') }}" class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Log in</a>
-                                <a href="{{ route('register') }}" id="register-button" class="bg-primary-600 text-white px-4 py-2 text-sm font-medium rounded-md hover:opacity-90 transition-colors duration-300">Register</a>
+                                {{-- <a href="{{ route('login') }}"
+                                    class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Log
+                                    in</a>
+                                <a href="{{ route('register') }}" id="register-button"
+                                    class="bg-primary-600 text-white px-4 py-2 text-sm font-medium rounded-md hover:opacity-90 transition-colors duration-300">Register</a> --}}
                             @endauth
                         </div>
                     </div>
@@ -97,9 +111,10 @@
                 </button>
             </div>
             <nav class="flex flex-col space-y-4">
-                @if(isset($articleCategories))
-                    @foreach($articleCategories as $category)
-                        <a href="#" class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-600 transition">{{ $category }}</a>
+                @if (isset($articleCategories))
+                    @foreach ($articleCategories as $category)
+                        <a href="{{ route('article.category', $category) }}"
+                            class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-60 transition">{{ $category }}</a>
                     @endforeach
                 @endif
             </nav>
@@ -121,4 +136,5 @@
         </footer>
     </div>
 </body>
+
 </html>

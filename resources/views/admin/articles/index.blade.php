@@ -9,9 +9,7 @@
         </div>
         <a href="{{ route('admin.articles.create') }}"
             class="inline-flex items-center justify-center px-5 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors duration-300">
-            <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
+            <i class="fas fa-plus mr-2 -ml-1 text-base"></i>
             Add New Article
         </a>
     </div>

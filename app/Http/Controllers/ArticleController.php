@@ -28,7 +28,15 @@ class ArticleController extends Controller
     public function loadMore(Request $request)
     {
         $page = $request->input('page', 1);
-        $articles = Article::orderBy('created_at', 'desc')->paginate(9, ['*'], 'page', $page);
+        $category = $request->input('category'); // Get category from request if present
+
+        $query = Article::orderBy('created_at', 'desc');
+        
+        if ($category) {
+            $query->where('category', $category); // Filter by category if provided
+        }
+
+        $articles = $query->paginate(9, ['*'], 'page', $page);
 
         // Return only the articles view fragment for AJAX
         $articlesHtml = view('article.partials.articles', compact('articles'))->render();
@@ -37,5 +45,20 @@ class ArticleController extends Controller
             'articles_html' => $articlesHtml,
             'has_more' => $articles->hasMorePages(),
         ]);
+    }
+
+    /**
+     * Display articles filtered by category.
+     *
+     * @param  string $category
+     * @return \Illuminate\View\View
+     */
+    public function showByCategory($category)
+    {
+        $articles = Article::where('category', $category)
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(9); // Fetch articles for the specific category, ordered by creation date
+
+        return view('article.category', compact('articles', 'category')); // Pass articles and category to the view
     }
 }

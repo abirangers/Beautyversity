@@ -26,6 +26,7 @@ Route::post('/course/{id}/enroll', [CourseController::class, 'enroll'])->name('c
 Route::get('/article/{id}', [HomeController::class, 'showArticle'])->name('article.show');
 Route::get('/articles', [ArticleController::class, 'index'])->name('article.index'); // Add route for articles index page
 Route::get('/articles/load-more', [ArticleController::class, 'loadMore'])->name('article.load-more'); // Add route for loading more articles
+Route::get('/category/{category}', [ArticleController::class, 'showByCategory'])->name('article.category'); // Add route for articles by category
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {

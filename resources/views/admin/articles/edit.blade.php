@@ -12,10 +12,7 @@
             <div>
                 <a href="{{ route('admin.articles.index') }}"
                     class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
+                    <i class="fas fa-arrow-left w-5 h-5 mr-2 text-sm"></i>
                     Back to Articles
                 </a>
             </div>
