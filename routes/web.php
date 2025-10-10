@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ArticleController; // Add import for ArticleController
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -23,6 +24,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/course/{id}', [CourseController::class, 'show'])->name('course.show');
 Route::post('/course/{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
 Route::get('/article/{id}', [HomeController::class, 'showArticle'])->name('article.show');
+Route::get('/articles', [ArticleController::class, 'index'])->name('article.index'); // Add route for articles index page
+Route::get('/articles/load-more', [ArticleController::class, 'loadMore'])->name('article.load-more'); // Add route for loading more articles
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {

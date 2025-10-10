@@ -6,78 +6,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Kelas Digital') }}</title>
+    <title>@yield('title', config('app.name', 'Kelas Digital'))</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-white text-gray-800">
+<body class="font-sans antialiased bg-gray-50 text-gray-800">
     <div class="min-h-screen flex flex-col">
-        <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-20">
-                    <div class="flex-shrink-0">
-                        <a href="{{ route('home') }}">
-                            <img src="{{ asset('logo.webp') }}" alt="Logo" class="h-10">
-                        </a>
+        
+        <header>
+            <!-- Top Bar -->
+            <div class="bg-gray-800 text-white text-sm">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-2">
+                    <div>
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        <span>Bandung - Jawa Barat, Indonesia</span>
                     </div>
-
-                    <nav class="hidden md:flex md:items-center md:space-x-8">
-                        <a href="{{ route('home') }}"
-                            class="text-sm font-semibold uppercase tracking-wider text-gray-700 hover:text-primary-600 transition">Home</a>
-                        <a href="#popular-courses"
-                            class="text-sm font-semibold uppercase tracking-wider text-gray-700 hover:text-primary-600 transition">Courses</a>
-                        <a href="#latest-articles"
-                            class="text-sm font-semibold uppercase tracking-wider text-gray-700 hover:text-primary-600 transition">Articles</a>
-                    </nav>
-
-                    <div class="hidden md:flex items-center space-x-4">
-                        @auth
-                            <a href="{{ url('/dashboard') }}"
-                                class="text-sm font-medium text-gray-700 hover:text-primary-600 transition">Dashboard</a>
-                            @if (Auth::user()->isAdmin())
-                                <a href="{{ route('admin.dashboard') }}"
-                                    class="text-sm font-medium text-gray-700 hover:text-primary-600 transition">Admin</a>
-                            @endif
-                            <a href="{{ route('logout') }}"
-                                class="text-sm font-medium text-gray-700 hover:text-primary-600 transition"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}"
-                                class="text-sm font-medium text-gray-700 hover:text-primary-600 transition">Log
-                                in</a>
-                            <a href="{{ route('register') }}"
-                                class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition">Register</a>
-                        @endauth
-                    </div>
-
-                    <div class="md:hidden">
-                        <button @click="open = ! open"
-                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition">
-                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16" />
-                                <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                    <div class="flex items-center space-x-4">
+                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
+
+            <!-- Main Header (Branding) -->
+            <div class="bg-white py-6">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset('logo.webp') }}" alt="Logo" class="h-12">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation Bar (Sticky on Scroll) -->
+            <nav id="main-header" class="bg-white border-b border-gray-200 relative transition-all duration-300">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <!-- Mobile Menu Button -->
+                        <div class="md:hidden">
+                            <button id="mobile-menu-button" class="text-gray-600 p-2 rounded-md">
+                                <i class="fas fa-bars h-6 w-6"></i>
+                            </button>
+                        </div>
+
+                        <!-- Desktop Navigation Links -->
+                        <div class="hidden md:flex md:items-center md:space-x-8">
+                            @if(isset($articleCategories))
+                                @foreach($articleCategories as $category)
+                                    <a href="#" class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
+                                        {{ $category }}
+                                    </a>
+                                @endforeach
+                            @endif
+                        </div>
+
+                        <!-- Search and Auth Links -->
+                        <div class="flex items-center space-x-4">
+                            <button class="text-gray-600 hover:text-primary-600">
+                                <i class="fas fa-search h-5 w-5"></i>
+                            </button>
+                            @auth
+                                <a href="{{ url('/dashboard') }}" class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Dashboard</a>
+                            @else
+                                <a href="{{ route('login') }}" class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Log in</a>
+                                <a href="{{ route('register') }}" id="register-button" class="bg-primary-600 text-white px-4 py-2 text-sm font-medium rounded-md hover:opacity-90 transition-colors duration-300">Register</a>
+                            @endauth
+                        </div>
+                    </div>
+                </div>
+            </nav>
         </header>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu-overlay" class="hidden fixed inset-0 bg-white z-50 p-4">
+            <div class="flex justify-between items-center mb-8">
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('logo.webp') }}" alt="Logo" class="h-10">
+                </a>
+                <button id="mobile-menu-close-button" class="text-gray-800">
+                    <i class="fas fa-times h-6 w-6"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col space-y-4">
+                @if(isset($articleCategories))
+                    @foreach($articleCategories as $category)
+                        <a href="#" class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-600 transition">{{ $category }}</a>
+                    @endforeach
+                @endif
+            </nav>
+        </div>
+
         <main class="flex-grow">
             @yield('content')
         </main>
@@ -85,45 +112,7 @@
         <footer style="background-color: #E6B4B8;" class="text-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        <h3 class="text-lg font-bold mb-4">Kelas Digital</h3>
-                        <p class="text-sm opacity-90">
-                            Menghadirkan informasi terkini, edukasi, dan inspirasi dalam dunia digital. Bersama kami,
-                            temukan solusi dan inovasi untuk kebutuhan belajar Anda.
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold mb-4">Latest Post</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li><a href="#" class="opacity-90 hover:opacity-100 transition">Tips Belajar
-                                    Efektif</a></li>
-                            <li><a href="#" class="opacity-90 hover:opacity-100 transition">Pengenalan Web
-                                    Development</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold mb-4">Category</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li><a href="#" class="opacity-90 hover:opacity-100 transition">Programming</a></li>
-                            <li><a href="#" class="opacity-90 hover:opacity-100 transition">Design</a></li>
-                            <li><a href="#" class="opacity-90 hover:opacity-100 transition">Marketing</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold mb-4">Newsletter</h3>
-                        <p class="text-sm opacity-90 mb-4">
-                            Berlangganan untuk mendapatkan informasi terbaru seputar tren, tips, dan ulasan produk
-                            digital.
-                        </p>
-                        <form action="#" method="POST" class="flex">
-                            <input type="email" placeholder="Your Email Address"
-                                class="w-full px-4 py-2 text-gray-800 rounded-l-md focus:outline-none">
-                            <button type="submit" style="background-color: #D18A9B;"
-                                class="px-4 py-2 text-white font-semibold rounded-r-md hover:opacity-90 transition shadow-sm hover:shadow-md">
-                                Sign Up
-                            </button>
-                        </form>
-                    </div>
+                    <!-- Footer content can be added here -->
                 </div>
                 <div class="mt-12 border-t border-white border-opacity-20 pt-8 text-center text-sm">
                     <p>Copyright © 2024, Kelas Digital. All Rights Reserved.</p>
@@ -132,5 +121,4 @@
         </footer>
     </div>
 </body>
-
 </html>
