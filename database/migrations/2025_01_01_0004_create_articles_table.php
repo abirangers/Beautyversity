@@ -11,9 +11,12 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('content');
+            $table->text('content')->nullable();
+            $table->string('content_format')->default('wordpress');
             $table->string('thumbnail')->default('default-article.jpg');
             $table->string('author');
+            $table->text('excerpt')->nullable();
+            $table->string('post_type')->default('post');
             $table->timestamps();
         });
     }

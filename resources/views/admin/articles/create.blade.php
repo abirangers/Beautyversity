@@ -44,19 +44,39 @@
                     </div>
 
                     <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                        <input type="text" name="category" id="category" value="{{ old('category') }}"
+                        <label for="categories" class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+                        <select name="categories[]" id="categories" multiple required
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
-                        @error('category')
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Pilih satu atau lebih kategori.</p>
+                        @error('categories')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('categories.*')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Tags (comma-separated)</label>
-                        <input type="text" name="tags" id="tags" value="{{ old('tags') }}"
+                        <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                        <select name="tags[]" id="tags" multiple
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
+                                    {{ $tag->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Opsional: pilih beberapa tag untuk artikel ini.</p>
                         @error('tags')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('tags.*')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -89,11 +109,12 @@
                         @enderror
                     </div>
 
+                    <input type="hidden" name="content_format" value="rich_text">
+
                     <div class="md:col-span-2">
-                        <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                        <textarea name="content" id="content" rows="12" required
-                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">{{ old('content') }}</textarea>
-                        @error('content')
+                        <label for="body" class="block text-sm font-medium text-gray-700 mb-2">Content</label>
+                        <x-trix-input id="body" name="body" value="{!! old('body') !!}" />
+                        @error('body')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

@@ -61,11 +61,17 @@
                     </div>
 
                     <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                        <input type="text" name="category" id="category"
-                            value="{{ old('category', $course->category) }}"
+                        <label for="course_category_id" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <select name="course_category_id" id="course_category_id" required
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
-                        @error('category')
+                            <option value="" disabled>-- Select category --</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('course_category_id', optional($course->category)->id) == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('course_category_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -99,10 +105,9 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <label for="full_video_ids" class="block text-sm font-medium text-gray-700 mb-2">Full Video
-                            IDs</label>
+                        <label for="full_video_ids" class="block text-sm font-medium text-gray-700 mb-2">Full Video IDs</label>
                         <input type="text" name="full_video_ids" id="full_video_ids"
-                            value="{{ old('full_video_ids', implode(',', json_decode($course->full_video_ids, true) ?? [])) }}"
+                            value="{{ old('full_video_ids', implode(',', $course->full_video_ids ?? [])) }}"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         <p class="mt-2 text-xs text-gray-500">Enter YouTube video IDs separated by a comma (e.g., abcde123,
                             fghij456).</p>

@@ -33,6 +33,8 @@
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Price</th>
                         <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Category</th>
+                        <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Level</th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Actions
@@ -50,6 +52,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">Rp {{ number_format($course->price, 0, ',', '.') }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-700">{{ optional($course->category)->name ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span
@@ -73,7 +78,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500">
                                 No courses found. Click "Add New Course" to get started.
                             </td>
                         </tr>

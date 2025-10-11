@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -39,5 +41,45 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+    }
+}
+
+@layer components {
+    .rich-text-content {
+        @apply prose prose-lg max-w-none text-gray-800
+            prose-headings:text-gray-900
+            prose-h1:text-4xl prose-h1:font-semibold prose-h1:mt-12 prose-h1:mb-6
+            prose-h2:text-3xl prose-h2:font-semibold prose-h2:mt-10 prose-h2:mb-5
+            prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4
+            prose-h4:text-xl prose-h4:font-semibold prose-h4:mt-6 prose-h4:mb-3
+            prose-p:text-lg prose-p:leading-8 prose-p:text-gray-700
+            prose-ul:list-disc prose-ul:pl-6 prose-ul:space-y-2 prose-ul:text-lg prose-ul:text-gray-700
+            prose-ol:list-decimal prose-ol:pl-6 prose-ol:space-y-2 prose-ol:text-lg prose-ol:text-gray-700
+            prose-li:leading-7
+            prose-strong:text-gray-900 prose-strong:font-semibold
+            prose-em:text-gray-700 prose-em:italic
+            prose-a:text-primary-600 prose-a:font-medium prose-a:transition-colors
+            prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:bg-gray-50 prose-blockquote:pl-5 prose-blockquote:py-4 prose-blockquote:rounded-lg prose-blockquote:text-gray-600
+            prose-figure:bg-gray-50 prose-figure:rounded-lg prose-figure:px-0 prose-img:rounded-lg prose-img:shadow-md
+            prose-figcaption:text-sm prose-figcaption:text-gray-500;
+        @apply prose-a:no-underline;
+    }
+
+    .rich-text-content a {
+        @apply text-primary-600 font-medium transition-colors duration-200 underline-offset-4;
+    }
+
+    .rich-text-content a:hover {
+        @apply text-primary-700;
+    }
+
+    .rich-text-content figure[data-trix-attachment],
+    .rich-text-content figure[data-gallery],
+    .rich-text-content figure.wp-block-image {
+        @apply overflow-hidden;
+    }
+
+    .rich-text-content rich-text-attachment {
+        display: block;
     }
 }

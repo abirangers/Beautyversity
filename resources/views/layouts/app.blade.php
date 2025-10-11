@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-rich-text::styles theme="richtextlaravel" />
 </head>
 
 <body class="font-sans antialiased bg-gray-50 text-gray-800">
@@ -70,9 +71,9 @@
                                 </a>
                                 @if (isset($articleCategories))
                                     @foreach ($articleCategories as $category)
-                                        <a href="{{ route('article.category', $category) }}"
+                                        <a href="{{ route('article.category', $category->slug) }}"
                                             class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition whitespace-nowrap">
-                                            {{ $category }}
+                                            {{ $category->name }}
                                         </a>
                                     @endforeach
                                 @endif
@@ -114,8 +115,8 @@
             <nav class="flex flex-col space-y-4">
                 @if (isset($articleCategories))
                     @foreach ($articleCategories as $category)
-                        <a href="{{ route('article.category', $category) }}"
-                            class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-60 transition">{{ $category }}</a>
+                        <a href="{{ route('article.category', $category->slug) }}"
+                            class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-60 transition">{{ $category->name }}</a>
                     @endforeach
                 @endif
             </nav>

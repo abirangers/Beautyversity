@@ -5,10 +5,11 @@
                 class="w-full h-48 object-cover">
         </a>
         <div class="p-6">
-            @if ($article->category)
-                <span class="text-xs font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block">
-                    {{ $article->category }}
-                </span>
+            @if ($article->categories->isNotEmpty())
+                @php $primaryCategory = $article->categories->first(); @endphp
+                <a href="{{ route('article.category', $primaryCategory->slug) }}" class="text-xs font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block">
+                    {{ $primaryCategory->name }}
+                </a>
             @endif
             <p class="text-sm text-gray-500 mb-2">{{ $article->created_at->format('F j, Y') }}</p>
             <h2 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">

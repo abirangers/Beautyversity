@@ -17,7 +17,7 @@ class Course extends Model
         'thumbnail',
         'trailer_video_id',
         'full_video_ids',
-        'category',
+        'course_category_id',
         'level',
     ];
 
@@ -49,5 +49,10 @@ class Course extends Model
     public function lessons()
     {
         return $this->hasMany(Lesson::class)->orderBy('order');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(CourseCategory::class, 'course_category_id');
     }
 }

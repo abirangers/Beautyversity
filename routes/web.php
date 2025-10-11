@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
+use App\Http\Controllers\Admin\ArticleCategoryController as AdminArticleCategoryController;
+use App\Http\Controllers\Admin\CourseCategoryController as AdminCourseCategoryController;
+use App\Http\Controllers\Admin\TagController as AdminTagController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -26,7 +29,7 @@ Route::post('/course/{id}/enroll', [CourseController::class, 'enroll'])->name('c
 Route::get('/article/{id}', [HomeController::class, 'showArticle'])->name('article.show');
 Route::get('/articles', [ArticleController::class, 'index'])->name('article.index'); // Add route for articles index page
 Route::get('/articles/load-more', [ArticleController::class, 'loadMore'])->name('article.load-more'); // Add route for loading more articles
-Route::get('/category/{category}', [ArticleController::class, 'showByCategory'])->name('article.category'); // Add route for articles by category
+Route::get('/articles/category/{slug}', [ArticleController::class, 'showByCategory'])->name('article.category'); // Add route for articles by category
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
@@ -39,10 +42,13 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     Route::middleware('admin')->name('admin.')->group(function () {
         Route::resource('courses', AdminCourseController::class);
+        Route::resource('course-categories', AdminCourseCategoryController::class)->except(['show']);
         Route::resource('lessons', AdminLessonController::class);
         Route::resource('users', AdminUserController::class);
         Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments.index');
         Route::post('payments/approve/{id}', [AdminPaymentController::class, 'approve'])->name('payments.approve');
         Route::resource('articles', AdminArticleController::class);
+        Route::resource('article-categories', AdminArticleCategoryController::class)->except(['show']);
+        Route::resource('tags', AdminTagController::class)->except(['show']);
     });
 });

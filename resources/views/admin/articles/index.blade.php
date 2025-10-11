@@ -51,7 +51,9 @@
                                 <div class="text-sm text-gray-700">{{ $article->author }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-700">{{ $article->category ?? 'N/A' }}</div>
+                                <div class="text-sm text-gray-700">
+                                    {{ $article->categories->isNotEmpty() ? $article->categories->pluck('name')->join(', ') : 'N/A' }}
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->post_type ?? 'post' }}</div>

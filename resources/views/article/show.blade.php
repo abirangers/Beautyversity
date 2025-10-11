@@ -6,10 +6,12 @@
 
     <div class="bg-gray-50 py-16">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
-            @if (!empty($article->category))
-                <a href="#" class="text-sm font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block">
-                    {{ $article->category }}
-                </a>
+            @if ($article->categories->isNotEmpty())
+                @foreach ($article->categories as $category)
+                    <a href="{{ route('article.category', $category->slug) }}" class="text-sm font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block">
+                        {{ $category->name }}
+                    </a>
+                @endforeach
             @endif
             @if (!empty($article->post_type) && $article->post_type !== 'post')
                 <a href="#" class="text-sm font-bold uppercase tracking-widest text-primary-600 mb-2 inline-block ml-2">
@@ -37,7 +39,7 @@
                 </div>
             @endif
 
-            <div class="prose prose-lg max-w-none text-gray-800">
+            <div class="rich-text-content">
                 @if (!empty($article->excerpt))
                     <div class="mb-6">
                         <p class="text-lg font-semibold text-gray-700 italic">{{ $article->excerpt }}</p>
@@ -48,13 +50,13 @@
 
             <div class="mt-12 pt-8 border-t border-gray-200">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    @if (!empty($article->tags))
+                    @if ($article->tags->isNotEmpty())
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-sm font-semibold text-gray-700">Tags:</span>
-                            @foreach (explode(',', $article->tags) as $tag)
+                            @foreach ($article->tags as $tag)
                                 <a href="#"
                                     class="px-3 py-1 text-xs font-semibold text-primary-800 bg-primary-100 rounded-full hover:bg-primary-200 transition">
-                                    {{ trim($tag) }}
+                                    {{ $tag->name }}
                                 </a>
                             @endforeach
                         </div>

@@ -4,28 +4,57 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
 
 class Article extends Model
 {
     use HasFactory;
+    use HasRichText;
 
     protected $fillable = [
         'title',
         'content',
+        'body',
         'thumbnail',
         'author',
-        'category',
-        'tags',
         'excerpt',
         'post_type',
+        'content_format',
     ];
+
+    protected $richTextAttributes = [
+        'body',
+    ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(ArticleCategory::class, 'article_article_category')->orderBy('name');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class)->orderBy('name');
+    }
+
+    public function getCategoryNamesAttribute()
+    {
+        return $this->categories->pluck('name');
+    }
+
+    public function getTagNamesAttribute()
+    {
+        return $this->tags->pluck('name');
+    }
 
     /**
      * Get the article content with WordPress blocks processed
      */
     public function getProcessedContentAttribute()
     {
-        return $this->processWordPressBlocks($this->content);
+        return match ($this->content_format) {
+            'rich_text' => $this->renderRichTextContent(),
+            default => $this->renderWordPressContent(),
+        };
     }
 
     /**
@@ -33,6 +62,10 @@ class Article extends Model
      */
     protected function processWordPressBlocks($content)
     {
+        if (blank($content)) {
+            return '';
+        }
+
         // Remove WordPress block comments but keep the HTML content inside
         $content = preg_replace('/<!--\s*wp:paragraph\s*-->\s*/', '<p class="mb-4 text-gray-700 leading-relaxed">', $content);
         $content = preg_replace('/<!--\s*\/wp:paragraph\s*-->\s*/', '</p>', $content);
@@ -42,7 +75,7 @@ class Article extends Model
         $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":2\}\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">', $content);
         $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":3\}\s*-->\s*/', '<h3 class="text-xl font-bold text-gray-900 mt-6 mb-3">', $content);
         $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":4\}\s*-->\s*/', '<h4 class="text-lg font-bold text-gray-900 mt-5 mb-2">', $content);
-        $content = preg_replace('/<!--\s*wp:heading\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">', $content); // fallback
+        $content = preg_replace('/<!--\s*wp:heading\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-4">', $content); // fallback
         $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*/', '</h2>', $content); // default closing tag
 
         // Process WordPress blocks with wp-block-heading className to make them larger
@@ -82,5 +115,15 @@ class Article extends Model
         $content = trim($content);
 
         return $content;
+    }
+
+    protected function renderRichTextContent(): string
+    {
+        return $this->body ? (string) $this->body : '';
+    }
+
+    protected function renderWordPressContent(): string
+    {
+        return $this->processWordPressBlocks($this->content ?? '');
     }
 }

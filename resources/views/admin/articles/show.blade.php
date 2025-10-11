@@ -35,12 +35,14 @@
                     Published on {{ $article->created_at->format('F d, Y') }}
                 </p>
                 <div class="mt-4 flex flex-wrap gap-4 text-sm">
-                    @if($article->category)
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold">Category:</span>
-                            <span>{{ $article->category }}</span>
-                        </div>
-                    @endif
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold">Categories:</span>
+                        @if($article->categories->isNotEmpty())
+                            <span>{{ $article->categories->pluck('name')->join(', ') }}</span>
+                        @else
+                            <span class="text-gray-500">N/A</span>
+                        @endif
+                    </div>
                     @if($article->post_type)
                         <div class="flex items-center gap-2">
                             <span class="font-bold">Post Type:</span>
@@ -48,12 +50,14 @@
                         </div>
                     @endif
                 </div>
-                @if($article->tags)
-                    <div class="mt-2">
-                        <span class="font-bold">Tags:</span>
-                        <span>{{ $article->tags }}</span>
-                    </div>
-                @endif
+                <div class="mt-2">
+                    <span class="font-bold">Tags:</span>
+                    @if($article->tags->isNotEmpty())
+                        <span>{{ $article->tags->pluck('name')->join(', ') }}</span>
+                    @else
+                        <span class="text-gray-500">N/A</span>
+                    @endif
+                </div>
             </div>
 
             @if($article->excerpt)
@@ -63,7 +67,7 @@
                 </div>
             @endif
 
-            <div class="prose prose-lg max-w-none text-gray-800">
+            <div class="rich-text-content">
                 {!! $article->processed_content !!}
             </div>
         </div>
