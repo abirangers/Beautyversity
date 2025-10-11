@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
@@ -34,6 +35,18 @@ Route::get('/articles/category/{slug}', [ArticleController::class, 'showByCatego
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::post('/attachments', function (Request $request) {
+        $request->validate([
+            'attachment' => ['required', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg', 'max:5120'],
+        ]);
+
+        $path = $request->file('attachment')->store('trix-attachments', 'public');
+
+        return [
+            'image_url' => '/storage/'.$path,
+        ];
+    })->name('attachments.store');
 });
 
 // Admin routes

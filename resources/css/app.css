@@ -9,6 +9,7 @@
 
 @theme {
     /* Primary color palette - Beautyversity Theme */
+    --color-primary-400: #f4d2d6; /* Pale Pink (Extra Light) */
     --color-primary-500: #e6b4b8; /* Dusty Rose (Light) */
     --color-primary-600: #d18a9b; /* Rose Pink (Base) */
     --color-primary-700: #b96f80; /* Darker Rose (Hover) */
@@ -71,6 +72,54 @@
 
     .rich-text-content a:hover {
         @apply text-primary-700;
+    }
+
+    .rich-text-content code {
+        @apply bg-gray-100 text-gray-800 px-2 py-1 rounded font-mono text-sm;
+    }
+
+    .rich-text-content pre {
+        @apply bg-gray-900 text-gray-800 text-sm leading-relaxed rounded-xl shadow-inner px-5 py-4 overflow-x-auto;
+    }
+
+    .rich-text-content pre code {
+        @apply bg-transparent p-0 text-gray-100 font-mono;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .rich-text-content {
+            @apply text-gray-100;
+        }
+
+        .rich-text-content h1,
+        .rich-text-content h2,
+        .rich-text-content h3,
+        .rich-text-content h4,
+        .rich-text-content h5,
+        .rich-text-content h6 {
+            @apply text-gray-100;
+        }
+
+        .rich-text-content p,
+        .rich-text-content li {
+            @apply text-gray-200;
+        }
+
+        .rich-text-content code {
+            @apply bg-gray-800 text-gray-100;
+        }
+
+        .rich-text-content pre {
+            @apply bg-gray-800 text-gray-100 shadow-lg;
+        }
+
+        .rich-text-content blockquote {
+            @apply border-primary-400 bg-gray-900 text-gray-100;
+        }
+
+        .rich-text-content figcaption {
+            @apply text-gray-400;
+        }
     }
 
     .rich-text-content figure[data-trix-attachment],
