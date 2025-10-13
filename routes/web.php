@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ArticleController; // Add import for ArticleController
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -31,6 +32,7 @@ Route::get('/article/{id}', [HomeController::class, 'showArticle'])->name('artic
 Route::get('/articles', [ArticleController::class, 'index'])->name('article.index'); // Add route for articles index page
 Route::get('/articles/load-more', [ArticleController::class, 'loadMore'])->name('article.load-more'); // Add route for loading more articles
 Route::get('/articles/category/{slug}', [ArticleController::class, 'showByCategory'])->name('article.category'); // Add route for articles by category
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
