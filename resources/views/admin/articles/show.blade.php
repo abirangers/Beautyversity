@@ -34,6 +34,7 @@
                     <span class="mx-2">&bull;</span>
                     Published on {{ $article->created_at->format('F d, Y') }}
                 </p>
+                <p class="mt-1 text-xs text-gray-500">Slug: <span class="font-mono">{{ $article->slug }}</span></p>
                 <div class="mt-4 flex flex-wrap gap-4 text-sm">
                     <div class="flex items-center gap-2">
                         <span class="font-bold">Categories:</span>

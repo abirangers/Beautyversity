@@ -25,13 +25,26 @@
         <div class="bg-white rounded-lg shadow-sm">
             <div class="p-6 md:p-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    <div class="md:col-span-2">
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                        <input type="text" name="title" id="title" value="{{ old('title') }}" required
-                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
-                        @error('title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <div class="md:col-span-2 space-y-6">
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                            <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                                class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            @error('title')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
+                            <input type="text" name="slug" id="slug" value="{{ old('slug') }}" required
+                                class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                                placeholder="contoh: tips-belajar-laravel">
+                            <p class="mt-1 text-xs text-gray-500">URL akan menggunakan slug ini. Gunakan huruf kecil dan pisahkan kata dengan tanda hubung.</p>
+                            @error('slug')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <div>

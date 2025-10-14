@@ -14,11 +14,12 @@ class HomeController extends Controller
         return view('home', compact('courses', 'articles'));
     }
     
-    public function showArticle($id)
+    public function showArticle(string $slug)
     {
         $article = \App\Models\Article::with('categories', 'tags')
             ->withRichText('body')
-            ->findOrFail($id);
+            ->where('slug', $slug)
+            ->firstOrFail();
         
         return view('article.show', compact('article'));
     }

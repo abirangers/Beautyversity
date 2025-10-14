@@ -29,6 +29,7 @@ class MigrateWordPressArticles extends Command
                 p.post_title as title,
                 p.post_content as content,
                 p.post_excerpt as excerpt,
+                p.post_name as slug,
                 p.post_date as created_at,
                 p.post_modified as updated_at,
                 p.post_type as post_type,
@@ -58,6 +59,7 @@ class MigrateWordPressArticles extends Command
                 ['title' => $wp_content->title],
                 [
                     'title' => $wp_content->title,
+                    'slug' => $wp_content->slug ?: Str::slug($wp_content->title),
                     'content' => $processed_content,
                     'content_format' => 'wordpress',
                     'excerpt' => $wp_content->excerpt,

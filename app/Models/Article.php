@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
 
 class Article extends Model
@@ -20,11 +21,56 @@ class Article extends Model
         'excerpt',
         'post_type',
         'content_format',
+        'slug',
     ];
 
     protected $richTextAttributes = [
         'body',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Article $article) {
+            if ($article->isDirty('slug')) {
+                $article->slug = $article->makeSlugUnique($article->slug ?? '');
+                return;
+            }
+
+            if (blank($article->slug)) {
+                $article->slug = $article->generateUniqueSlugFromTitle($article->title);
+            }
+        });
+    }
+
+    protected function generateUniqueSlugFromTitle(string $title): string
+    {
+        $baseSlug = Str::slug($title) ?: 'article';
+
+        return $this->makeSlugUnique($baseSlug);
+    }
+
+    protected function makeSlugUnique(string $baseSlug): string
+    {
+        $base = trim($baseSlug) !== '' ? $baseSlug : 'article';
+        $slug = $base;
+        $counter = 1;
+
+        while (
+            static::where('slug', $slug)
+                ->when($this->exists, fn ($query) => $query->where('id', '!=', $this->id))
+                ->exists()
+        ) {
+            $slug = "{$base}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    public function setSlugAttribute($value): void
+    {
+        $this->attributes['slug'] = $value !== null ? Str::slug($value) : null;
+    }
 
     public function categories()
     {

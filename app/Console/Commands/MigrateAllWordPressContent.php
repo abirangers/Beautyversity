@@ -46,6 +46,7 @@ class MigrateAllWordPressContent extends Command
                 p.post_title as title,
                 p.post_content as content,
                 p.post_excerpt as excerpt,
+                p.post_name as slug,
                 p.post_date as created_at,
                 p.post_modified as updated_at,
                 p.post_type as post_type,
@@ -138,6 +139,7 @@ class MigrateAllWordPressContent extends Command
             ['title' => $title],
             [
                 'title' => $title,
+                'slug' => $this->resolveSlug($wp_content, $title),
                 'content' => $processed_content,
                 'content_format' => 'wordpress',
                 'excerpt' => $wp_content->excerpt,
@@ -179,6 +181,17 @@ class MigrateAllWordPressContent extends Command
         }
 
         $this->info("Migrated {$wp_content->post_type}: {$title}");
+    }
+
+    private function resolveSlug($wp_content, string $fallbackTitle): string
+    {
+        $base = trim((string) ($wp_content->slug ?? ''));
+
+        if ($base !== '') {
+            return $base;
+        }
+
+        return Str::slug($fallbackTitle) ?: 'article-' . $wp_content->wp_id;
     }
 
     private function processArticleContent($content, $wp_connection)

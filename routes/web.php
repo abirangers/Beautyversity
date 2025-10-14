@@ -28,7 +28,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/course/{id}', [CourseController::class, 'show'])->name('course.show');
 Route::post('/course/{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
-Route::get('/article/{id}', [HomeController::class, 'showArticle'])->name('article.show');
+Route::get('/article/{slug}', [HomeController::class, 'showArticle'])->name('article.show');
 Route::get('/articles', [ArticleController::class, 'index'])->name('article.index'); // Add route for articles index page
 Route::get('/articles/load-more', [ArticleController::class, 'loadMore'])->name('article.load-more'); // Add route for loading more articles
 Route::get('/articles/category/{slug}', [ArticleController::class, 'showByCategory'])->name('article.category'); // Add route for articles by category

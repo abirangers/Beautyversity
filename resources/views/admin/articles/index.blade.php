@@ -46,6 +46,7 @@
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">{{ $article->title }}</div>
+                                <div class="text-xs text-gray-500 mt-1">{{ $article->slug }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->author }}</div>
