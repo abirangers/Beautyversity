@@ -29,7 +29,7 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function loadMore(Request $request)
-    {
+    { 
         $page = $request->input('page', 1);
         $categorySlug = $request->input('category_slug');
 

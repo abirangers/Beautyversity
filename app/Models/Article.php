@@ -31,11 +31,18 @@ class Article extends Model
     protected static function booted(): void
     {
         static::saving(function (Article $article) {
-            if ($article->isDirty('slug')) {
-                $article->slug = $article->makeSlugUnique($article->slug ?? '');
+            // Jika slug dirty tapi kosong/blank, set ke null agar masuk logic generate dari title
+            if ($article->isDirty('slug') && blank($article->slug)) {
+                $article->slug = null;
+            }
+
+            // Jika slug dirty dan ada isinya, pastikan unique
+            if ($article->isDirty('slug') && filled($article->slug)) {
+                $article->slug = $article->makeSlugUnique($article->slug);
                 return;
             }
 
+            // Jika slug masih blank, generate dari title
             if (blank($article->slug)) {
                 $article->slug = $article->generateUniqueSlugFromTitle($article->title);
             }
@@ -69,7 +76,9 @@ class Article extends Model
 
     public function setSlugAttribute($value): void
     {
-        $this->attributes['slug'] = $value !== null ? Str::slug($value) : null;
+        // Ubah empty string jadi null agar logic blank() berfungsi dengan benar
+        $slugified = Str::slug($value);
+        $this->attributes['slug'] = filled($slugified) ? $slugified : null;
     }
 
     public function categories()
