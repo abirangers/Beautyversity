@@ -46,7 +46,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                 @foreach ($courses as $course)
                                     <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-                                        <a href="{{ route('course.show', $course) }}">
+                                        <a href="{{ route('course.show', $course->slug) }}">
                                             <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}" class="w-full h-48 object-cover">
                                         </a>
                                         <div class="p-6 flex flex-col gap-3">
@@ -54,7 +54,7 @@
                                                 {{ optional($course->category)->name ?? 'Tanpa Kategori' }}
                                             </div>
                                             <h3 class="text-lg font-semibold text-gray-900 leading-tight line-clamp-2">
-                                                <a href="{{ route('course.show', $course) }}" class="hover:text-primary-600 transition-colors">
+                                                <a href="{{ route('course.show', $course->slug) }}" class="hover:text-primary-600 transition-colors">
                                                     {{ $course->title }}
                                                 </a>
                                             </h3>
@@ -64,7 +64,7 @@
                                             <p class="text-sm text-gray-600 line-clamp-3">{{ \Illuminate\Support\Str::limit($course->description, 120) }}</p>
                                             <div class="flex items-center justify-between mt-auto pt-1">
                                                 <span class="text-primary-600 font-bold">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
-                                                <a href="{{ route('course.show', $course) }}" class="text-sm font-semibold text-primary-600 hover:underline">
+                                                <a href="{{ route('course.show', $course->slug) }}" class="text-sm font-semibold text-primary-600 hover:underline">
                                                     Lihat Detail
                                                 </a>
                                             </div>

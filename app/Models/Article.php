@@ -125,13 +125,27 @@ class Article extends Model
         $content = preg_replace('/<!--\s*wp:paragraph\s*-->\s*/', '<p class="mb-4 text-gray-700 leading-relaxed">', $content);
         $content = preg_replace('/<!--\s*\/wp:paragraph\s*-->\s*/', '</p>', $content);
 
-        // Handle different heading levels - wp:heading with class names
-        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":1\}\s*-->\s*/', '<h1 class="text-3xl font-bold text-gray-900 mt-8 mb-4">', $content);
-        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":2\}\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">', $content);
-        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":3\}\s*-->\s*/', '<h3 class="text-xl font-bold text-gray-900 mt-6 mb-3">', $content);
-        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":4\}\s*-->\s*/', '<h4 class="text-lg font-bold text-gray-900 mt-5 mb-2">', $content);
-        $content = preg_replace('/<!--\s*wp:heading\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-4">', $content); // fallback
-        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*/', '</h2>', $content); // default closing tag
+        // Handle different heading levels with proper closing tags
+        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":1[^\}]*\}\s*-->\s*/', '<h1 class="text-3xl font-bold text-gray-900 mt-8 mb-4">', $content);
+        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":2[^\}]*\}\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">', $content);
+        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":3[^\}]*\}\s*-->\s*/', '<h3 class="text-xl font-bold text-gray-900 mt-6 mb-3">', $content);
+        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":4[^\}]*\}\s*-->\s*/', '<h4 class="text-lg font-bold text-gray-900 mt-5 mb-2">', $content);
+        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":5[^\}]*\}\s*-->\s*/', '<h5 class="text-base font-bold text-gray-900 mt-4 mb-2">', $content);
+        $content = preg_replace('/<!--\s*wp:heading\s*\{\"level\":6[^\}]*\}\s*-->\s*/', '<h6 class="text-sm font-bold text-gray-900 mt-3 mb-2">', $content);
+        
+        // Handle heading without level (default to h2)
+        $content = preg_replace('/<!--\s*wp:heading\s*-->\s*/', '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">', $content);
+        
+        // Replace closing tags individually for each level
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*<\/h1>/', '</h1>', $content);
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*<\/h2>/', '</h2>', $content);
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*<\/h3>/', '</h3>', $content);
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*<\/h4>/', '</h4>', $content);
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*<\/h5>/', '</h5>', $content);
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*<\/h6>/', '</h6>', $content);
+
+        // Catch any remaining closing heading comments
+        $content = preg_replace('/<!--\s*\/wp:heading\s*-->\s*/', '', $content);
 
         // Process WordPress blocks with wp-block-heading className to make them larger
         $content = preg_replace('/<!--\s*wp:heading\s*(\{[^\}]*\"level\":2[^\}]*\"className\":\"wp-block-heading\"[^\}]*)\}\s*-->\s*/', '<h2 class="wp-block-heading text-3xl font-bold text-gray-900 mt-8 mb-4">', $content);
@@ -157,12 +171,25 @@ class Article extends Model
         $content = preg_replace('/<!--\s*wp:image\s*-->\s*/', '<figure class="wp-block-image my-6 text-center">', $content);
         $content = preg_replace('/<!--\s*\/wp:image\s*-->\s*/', '</figure>', $content);
 
-        // Handle strong and em tags if they appear in the content
-        $content = str_replace('<strong>', '<strong class="font-bold">', $content);
-        $content = str_replace('<em>', '<em class="italic">', $content);
+        // Handle strong and em tags - add class if not present
+        $content = preg_replace('/<strong(?![^>]*class=)([^>]*)>/i', '<strong class="font-bold"$1>', $content);
+        $content = preg_replace('/<em(?![^>]*class=)([^>]*)>/i', '<em class="italic"$1>', $content);
 
-        // Add styling to hyperlinks for better UX, especially for "Baca Juga" links
-        $content = preg_replace('/<a\s+([^>]*?)class="([^"]*?)"/i', '<a $1class="$2 text-primary-600 hover:text-primary-800 hover:underline transition-colors duration-300"', $content);
+        // Add styling to hyperlinks for better UX
+        // For links with existing classes, append our classes
+        $content = preg_replace_callback(
+            '/<a\s+([^>]*?)class="([^"]*?)"/i',
+            function ($matches) {
+                $classes = $matches[2];
+                // Only add if primary classes not already present
+                if (!str_contains($classes, 'text-primary')) {
+                    $classes .= ' text-primary-600 hover:text-primary-800 hover:underline transition-colors duration-300';
+                }
+                return '<a ' . $matches[1] . 'class="' . trim($classes) . '"';
+            },
+            $content
+        );
+        // For links without classes
         $content = preg_replace('/<a\s+(?![^>]*class=)/i', '<a class="text-primary-600 hover:text-primary-800 hover:underline transition-colors duration-300" ', $content);
 
         // Clean up any extra whitespace that might result from block removal

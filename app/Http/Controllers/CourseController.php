@@ -8,11 +8,11 @@ use App\Models\Enrollment;
 
 class CourseController extends Controller
 {
-    public function show($id)
+    public function show($slug)
     {
         $course = \App\Models\Course::with(['lessons' => function($query) {
             $query->orderBy('module')->orderBy('order');
-        }])->findOrFail($id);
+        }])->where('slug', $slug)->firstOrFail();
         
         $user = Auth::user();
         
@@ -39,9 +39,9 @@ class CourseController extends Controller
         return view('course.show', compact('course', 'userHasAccess', 'userEnrollment', 'lessonsByModule', 'totalVideos', 'enrolledStudentsCount'));
     }
     
-    public function enroll($id)
+    public function enroll($slug)
     {
-        $course = \App\Models\Course::findOrFail($id);
+        $course = \App\Models\Course::where('slug', $slug)->firstOrFail();
         $user = Auth::user();
         
         if (!$user) {

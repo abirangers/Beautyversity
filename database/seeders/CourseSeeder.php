@@ -16,7 +16,7 @@ class CourseSeeder extends Seeder
 
         // Create sample cosmetic-related courses
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Basic Skincare Routine: From Zero to Hero'],
+            ['slug' => 'basic-skincare-routine-from-zero-to-hero'],
             [
                 'title' => 'Basic Skincare Routine: From Zero to Hero',
                 'instructor' => 'Dr. Amanda Larasati',
@@ -31,7 +31,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Mengenal Bahan Skincare: Retinol, AHA, BHA'],
+            ['slug' => 'mengenal-bahan-skincare-retinol-aha-bha'],
             [
                 'title' => 'Mengenal Bahan Skincare: Retinol, AHA, BHA',
                 'instructor' => 'Dr. Sarah Wijaya',
@@ -46,7 +46,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Makeup Artistry: Dasar-dasar Makeup'],
+            ['slug' => 'makeup-artistry-dasar-dasar-makeup'],
             [
                 'title' => 'Makeup Artistry: Dasar-dasar Makeup',
                 'instructor' => 'Diana Kartika',
@@ -61,7 +61,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Hair Care: Perawatan Rambut Kering dan Rusak'],
+            ['slug' => 'hair-care-perawatan-rambut-kering-dan-rusak'],
             [
                 'title' => 'Hair Care: Perawatan Rambut Kering dan Rusak',
                 'instructor' => 'Dr. Rina Setiawan',
@@ -76,7 +76,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Anti-Aging Skincare: Lawan Tanda-tanda Penuaan'],
+            ['slug' => 'anti-aging-skincare-lawan-tanda-tanda-penuaan'],
             [
                 'title' => 'Anti-Aging Skincare: Lawan Tanda-tanda Penuaan',
                 'instructor' => 'Dr. Michael Tanuwijaya',
@@ -91,7 +91,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Natural Beauty: Makeup dengan Bahan Alami'],
+            ['slug' => 'natural-beauty-makeup-dengan-bahan-alami'],
             [
                 'title' => 'Natural Beauty: Makeup dengan Bahan Alami',
                 'instructor' => 'Maya Sari',
@@ -106,7 +106,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Sunscreen: Panduan Lengkap Perlindungan UV'],
+            ['slug' => 'sunscreen-panduan-lengkap-perlindungan-uv'],
             [
                 'title' => 'Sunscreen: Panduan Lengkap Perlindungan UV',
                 'instructor' => 'Dr. Fitriani Kusuma',
@@ -121,7 +121,7 @@ class CourseSeeder extends Seeder
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Color Theory dalam Makeup'],
+            ['slug' => 'color-theory-dalam-makeup'],
             [
                 'title' => 'Color Theory dalam Makeup',
                 'instructor' => 'Bella Anggraini',

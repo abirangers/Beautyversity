@@ -35,6 +35,7 @@ class CourseController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|unique:courses,slug',
             'instructor' => 'required|string|max:255',
             'description' => 'required',
             'price' => 'required|integer|min:0',
@@ -56,6 +57,7 @@ class CourseController extends Controller
 
         Course::create([
             'title' => $data['title'],
+            'slug' => $data['slug'] ?? null,
             'instructor' => $data['instructor'],
             'description' => $data['description'],
             'price' => $data['price'],
@@ -94,8 +96,11 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $course = Course::findOrFail($id);
+        
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|unique:courses,slug,' . $course->id,
             'instructor' => 'required|string|max:255',
             'description' => 'required',
             'price' => 'required|integer|min:0',
@@ -106,10 +111,9 @@ class CourseController extends Controller
             'level' => 'required|in:Beginner,Intermediate,Advanced',
         ]);
 
-        $course = Course::findOrFail($id);
-
         $payload = [
             'title' => $data['title'],
+            'slug' => $data['slug'] ?? null,
             'instructor' => $data['instructor'],
             'description' => $data['description'],
             'price' => $data['price'],
