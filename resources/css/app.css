@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -7,6 +9,7 @@
 
 @theme {
     /* Primary color palette - Beautyversity Theme */
+    --color-primary-400: #f4d2d6; /* Pale Pink (Extra Light) */
     --color-primary-500: #e6b4b8; /* Dusty Rose (Light) */
     --color-primary-600: #d18a9b; /* Rose Pink (Base) */
     --color-primary-700: #b96f80; /* Darker Rose (Hover) */
@@ -39,5 +42,93 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+    }
+}
+
+@layer components {
+    .rich-text-content {
+        @apply prose prose-lg max-w-none text-gray-800
+            prose-headings:text-gray-900
+            prose-h1:text-4xl prose-h1:font-semibold prose-h1:mt-12 prose-h1:mb-6
+            prose-h2:text-3xl prose-h2:font-semibold prose-h2:mt-10 prose-h2:mb-5
+            prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4
+            prose-h4:text-xl prose-h4:font-semibold prose-h4:mt-6 prose-h4:mb-3
+            prose-p:text-lg prose-p:leading-8 prose-p:text-gray-700
+            prose-ul:list-disc prose-ul:pl-6 prose-ul:space-y-2 prose-ul:text-lg prose-ul:text-gray-700
+            prose-ol:list-decimal prose-ol:pl-6 prose-ol:space-y-2 prose-ol:text-lg prose-ol:text-gray-700
+            prose-li:leading-7
+            prose-strong:text-gray-900 prose-strong:font-semibold
+            prose-em:text-gray-700 prose-em:italic
+            prose-a:text-primary-600 prose-a:font-medium prose-a:transition-colors
+            prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:bg-gray-50 prose-blockquote:pl-5 prose-blockquote:py-4 prose-blockquote:rounded-lg prose-blockquote:text-gray-600
+            prose-figure:bg-gray-50 prose-figure:rounded-lg prose-figure:px-0 prose-img:rounded-lg prose-img:shadow-md
+            prose-figcaption:text-sm prose-figcaption:text-gray-500;
+        @apply prose-a:no-underline;
+    }
+
+    .rich-text-content a {
+        @apply text-primary-600 font-medium transition-colors duration-200 underline-offset-4;
+    }
+
+    .rich-text-content a:hover {
+        @apply text-primary-700;
+    }
+
+    .rich-text-content code {
+        @apply bg-gray-100 text-gray-800 px-2 py-1 rounded font-mono text-sm;
+    }
+
+    .rich-text-content pre {
+        @apply bg-gray-900 text-gray-800 text-sm leading-relaxed rounded-xl shadow-inner px-5 py-4 overflow-x-auto;
+    }
+
+    .rich-text-content pre code {
+        @apply bg-transparent p-0 text-gray-100 font-mono;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .rich-text-content {
+            @apply text-gray-100;
+        }
+
+        .rich-text-content h1,
+        .rich-text-content h2,
+        .rich-text-content h3,
+        .rich-text-content h4,
+        .rich-text-content h5,
+        .rich-text-content h6 {
+            @apply text-gray-100;
+        }
+
+        .rich-text-content p,
+        .rich-text-content li {
+            @apply text-gray-200;
+        }
+
+        .rich-text-content code {
+            @apply bg-gray-800 text-gray-100;
+        }
+
+        .rich-text-content pre {
+            @apply bg-gray-800 text-gray-100 shadow-lg;
+        }
+
+        .rich-text-content blockquote {
+            @apply border-primary-400 bg-gray-900 text-gray-100;
+        }
+
+        .rich-text-content figcaption {
+            @apply text-gray-400;
+        }
+    }
+
+    .rich-text-content figure[data-trix-attachment],
+    .rich-text-content figure[data-gallery],
+    .rich-text-content figure.wp-block-image {
+        @apply overflow-hidden;
+    }
+
+    .rich-text-content rich-text-attachment {
+        display: block;
     }
 }

@@ -35,7 +35,7 @@
                 @forelse ($courses as $course)
                     <div
                         class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-                        <a href="{{ route('course.show', $course) }}">
+                        <a href="{{ route('course.show', $course->slug) }}">
                             <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}"
                                 class="w-full h-48 object-cover">
                         </a>
@@ -47,7 +47,7 @@
                             <div class="flex items-center justify-between">
                                 <span
                                     class="text-lg font-bold text-primary-600">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
-                                <a href="{{ route('course.show', $course) }}"
+                                <a href="{{ route('course.show', $course->slug) }}"
                                     class="text-sm font-semibold text-primary-600 hover:underline">
                                     Lihat Detail
                                 </a>

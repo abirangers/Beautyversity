@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
+use App\Models\CourseCategory;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -12,7 +14,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = \App\Models\Course::latest()->paginate(10);
+        $courses = Course::with('category')->latest()->paginate(10);
         return view('admin.courses.index', compact('courses'));
     }
 
@@ -21,7 +23,9 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('admin.courses.create');
+        $categories = CourseCategory::orderBy('name')->get();
+
+        return view('admin.courses.create', compact('categories'));
     }
 
     /**
@@ -29,15 +33,16 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|unique:courses,slug',
             'instructor' => 'required|string|max:255',
             'description' => 'required',
             'price' => 'required|integer|min:0',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'trailer_video_id' => 'required|string',
             'full_video_ids' => 'nullable|string',
-            'category' => 'nullable|string|max:255',
+            'course_category_id' => 'required|exists:course_categories,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
         ]);
 
@@ -46,18 +51,21 @@ class CourseController extends Controller
             $thumbnail = $request->file('thumbnail')->store('courses', 'public');
         }
 
-        $fullVideoIds = $request->full_video_ids ? explode(',', $request->full_video_ids) : [];
+        $fullVideoIds = $data['full_video_ids']
+            ? array_filter(array_map('trim', explode(',', $data['full_video_ids'])))
+            : [];
 
-        \App\Models\Course::create([
-            'title' => $request->title,
-            'instructor' => $request->instructor,
-            'description' => $request->description,
-            'price' => $request->price,
+        Course::create([
+            'title' => $data['title'],
+            'slug' => $data['slug'] ?? null,
+            'instructor' => $data['instructor'],
+            'description' => $data['description'],
+            'price' => $data['price'],
             'thumbnail' => $thumbnail,
-            'trailer_video_id' => $request->trailer_video_id,
-            'full_video_ids' => json_encode($fullVideoIds),
-            'category' => $request->category,
-            'level' => $request->level,
+            'trailer_video_id' => $data['trailer_video_id'],
+            'full_video_ids' => $fullVideoIds,
+            'course_category_id' => $data['course_category_id'],
+            'level' => $data['level'],
         ]);
 
         return redirect()->route('admin.courses.index')->with('success', 'Course created successfully.');
@@ -68,7 +76,7 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
-        $course = \App\Models\Course::findOrFail($id);
+        $course = Course::with('category')->findOrFail($id);
         return view('admin.courses.show', compact('course'));
     }
 
@@ -77,8 +85,10 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        $course = \App\Models\Course::findOrFail($id);
-        return view('admin.courses.edit', compact('course'));
+        $course = Course::with('category')->findOrFail($id);
+        $categories = CourseCategory::orderBy('name')->get();
+
+        return view('admin.courses.edit', compact('course', 'categories'));
     }
 
     /**
@@ -86,38 +96,42 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
+        $course = Course::findOrFail($id);
+        
+        $data = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|unique:courses,slug,' . $course->id,
             'instructor' => 'required|string|max:255',
             'description' => 'required',
             'price' => 'required|integer|min:0',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'trailer_video_id' => 'required|string',
             'full_video_ids' => 'nullable|string',
-            'category' => 'nullable|string|max:255',
+            'course_category_id' => 'required|exists:course_categories,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
         ]);
 
-        $course = \App\Models\Course::findOrFail($id);
-
-        $data = [
-            'title' => $request->title,
-            'instructor' => $request->instructor,
-            'description' => $request->description,
-            'price' => $request->price,
-            'trailer_video_id' => $request->trailer_video_id,
-            'category' => $request->category,
-            'level' => $request->level,
+        $payload = [
+            'title' => $data['title'],
+            'slug' => $data['slug'] ?? null,
+            'instructor' => $data['instructor'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+            'trailer_video_id' => $data['trailer_video_id'],
+            'course_category_id' => $data['course_category_id'],
+            'level' => $data['level'],
         ];
 
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
+            $payload['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
         }
 
-        $fullVideoIds = $request->full_video_ids ? explode(',', $request->full_video_ids) : [];
-        $data['full_video_ids'] = json_encode($fullVideoIds);
+        $fullVideoIds = $data['full_video_ids']
+            ? array_filter(array_map('trim', explode(',', $data['full_video_ids'])))
+            : [];
+        $payload['full_video_ids'] = $fullVideoIds;
 
-        $course->update($data);
+        $course->update($payload);
 
         return redirect()->route('admin.courses.index')->with('success', 'Course updated successfully.');
     }
@@ -127,7 +141,7 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        $course = \App\Models\Course::findOrFail($id);
+        $course = Course::findOrFail($id);
         $course->delete();
 
         return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');

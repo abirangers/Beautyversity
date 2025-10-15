@@ -11,15 +11,20 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->string('instructor');
             $table->text('description');
             $table->integer('price');
             $table->string('thumbnail')->default('default-course.jpg');
             $table->string('trailer_video_id');
             $table->json('full_video_ids')->nullable();
-            $table->string('category')->nullable();
+            $table->unsignedBigInteger('course_category_id');
             $table->enum('level', ['Beginner', 'Intermediate', 'Advanced'])->default('Beginner');
             $table->timestamps();
+
+            $table->foreign('course_category_id')
+                ->references('id')->on('course_categories')
+                ->onDelete('restrict');
         });
     }
 

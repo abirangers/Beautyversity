@@ -48,7 +48,7 @@
                             <dt class="font-medium text-gray-500">Full Video IDs</dt>
                             <dd class="text-gray-900 mt-1 break-words">
                                 @php
-                                    $videoIds = json_decode($course->full_video_ids, true) ?? [];
+                                    $videoIds = $course->full_video_ids ?? [];
                                 @endphp
                                 {{ count($videoIds) > 0 ? implode(', ', $videoIds) : 'N/A' }}
                             </dd>
@@ -70,7 +70,7 @@
                         </div>
                         <div>
                             <dt class="font-medium text-gray-500">Category</dt>
-                            <dd class="text-gray-900 mt-1">{{ $course->category ?? 'N/A' }}</dd>
+                            <dd class="text-gray-900 mt-1">{{ optional($course->category)->name ?? 'N/A' }}</dd>
                         </div>
                         <div>
                             <dt class="font-medium text-gray-500">Level</dt>

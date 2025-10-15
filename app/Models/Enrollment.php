@@ -16,6 +16,7 @@ class Enrollment extends Model
         'payment_status',
         'payment_method',
         'payment_proof',
+        'enrolled_at',
     ];
 
     protected $casts = [

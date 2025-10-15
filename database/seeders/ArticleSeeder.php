@@ -12,25 +12,44 @@ class ArticleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create sample articles
-        \App\Models\Article::updateOrCreate(
-            ['title' => 'Getting Started with Laravel'],
+        $articles = [
             [
                 'title' => 'Getting Started with Laravel',
-                'content' => 'Laravel is a powerful PHP framework that makes web development easier and more enjoyable. In this article, we\'ll cover the basics of Laravel including routing, middleware, and Eloquent ORM.',
-                'thumbnail' => 'default-article.jpg',
                 'author' => 'Jane Smith',
-            ]
-        );
-
-        \App\Models\Article::updateOrCreate(
-            ['title' => 'Understanding PHP Security Best Practices'],
+                'excerpt' => 'Dasar-dasar framework Laravel untuk pengembang web pemula.',
+                'content' => 'Laravel adalah framework PHP yang membuat pengembangan web menjadi lebih menyenangkan. Artikel ini membahas routing, middleware, dan Eloquent ORM.',
+                'categories' => ['skincare-tips', 'wellness'],
+                'tags' => ['tutorial', 'tips'],
+            ],
             [
                 'title' => 'Understanding PHP Security Best Practices',
-                'content' => 'Security is crucial when developing web applications. This article explores common security vulnerabilities in PHP applications and how to prevent them.',
-                'thumbnail' => 'default-article.jpg',
                 'author' => 'John Doe',
-            ]
-        );
+                'excerpt' => 'Panduan cepat untuk mengamankan aplikasi PHP dari celah umum.',
+                'content' => 'Keamanan adalah hal penting saat mengembangkan aplikasi web. Artikel ini membahas kerentanan umum pada aplikasi PHP dan cara mencegahnya.',
+                'categories' => ['product-review'],
+                'tags' => ['tips', 'review'],
+            ],
+        ];
+
+        foreach ($articles as $data) {
+            $article = \App\Models\Article::updateOrCreate(
+                ['title' => $data['title']],
+                [
+                    'title' => $data['title'],
+                    'author' => $data['author'],
+                    'excerpt' => $data['excerpt'],
+                    'content_format' => 'wordpress',
+                    'content' => $data['content'],
+                    'thumbnail' => 'default-article.jpg',
+                    'post_type' => 'post',
+                ]
+            );
+
+            $categoryIds = \App\Models\ArticleCategory::whereIn('slug', $data['categories'])->pluck('id');
+            $tagIds = \App\Models\Tag::whereIn('slug', $data['tags'])->pluck('id');
+
+            $article->categories()->sync($categoryIds);
+            $article->tags()->sync($tagIds);
+        }
     }
 }

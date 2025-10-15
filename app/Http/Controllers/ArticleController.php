@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Article; // Import the Article model
+use App\Models\Article;
+use App\Models\ArticleCategory;
 
 class ArticleController extends Controller
 {
@@ -14,7 +15,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::orderBy('created_at', 'desc')->paginate(9); // Fetch articles with pagination, 9 per page
+        $articles = Article::with('categories', 'tags')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
 
         return view('article.index', compact('articles')); // Pass articles to the view
     }
@@ -26,14 +29,17 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function loadMore(Request $request)
-    {
+    { 
         $page = $request->input('page', 1);
-        $category = $request->input('category'); // Get category from request if present
+        $categorySlug = $request->input('category_slug');
 
-        $query = Article::orderBy('created_at', 'desc');
-        
-        if ($category) {
-            $query->where('category', $category); // Filter by category if provided
+        $query = Article::with('categories', 'tags')
+            ->orderBy('created_at', 'desc');
+
+        if ($categorySlug) {
+            $query->whereHas('categories', function ($builder) use ($categorySlug) {
+                $builder->where('slug', $categorySlug);
+            });
         }
 
         $articles = $query->paginate(9, ['*'], 'page', $page);
@@ -48,17 +54,22 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display articles filtered by category.
+     * Display articles filtered by category slug.
      *
-     * @param  string $category
+     * @param  string $slug
      * @return \Illuminate\View\View
      */
-    public function showByCategory($category)
+    public function showByCategory($slug)
     {
-        $articles = Article::where('category', $category)
-                          ->orderBy('created_at', 'desc')
-                          ->paginate(9); // Fetch articles for the specific category, ordered by creation date
+        $category = ArticleCategory::where('slug', $slug)->firstOrFail();
 
-        return view('article.category', compact('articles', 'category')); // Pass articles and category to the view
+        $articles = Article::with('categories', 'tags')
+            ->whereHas('categories', function ($builder) use ($category) {
+                $builder->where('article_categories.id', $category->id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+        return view('article.category', compact('articles', 'category'));
     }
 }

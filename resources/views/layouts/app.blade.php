@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-rich-text::styles theme="richtextlaravel" />
 </head>
 
 <body class="font-sans antialiased bg-gray-50 text-gray-800">
@@ -70,9 +71,9 @@
                                 </a>
                                 @if (isset($articleCategories))
                                     @foreach ($articleCategories as $category)
-                                        <a href="{{ route('article.category', $category) }}"
+                                        <a href="{{ route('article.category', $category->slug) }}"
                                             class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition whitespace-nowrap">
-                                            {{ $category }}
+                                            {{ $category->name }}
                                         </a>
                                     @endforeach
                                 @endif
@@ -81,9 +82,22 @@
 
                         <!-- Search and Auth Links -->
                         <div class="flex items-center space-x-4">
-                            <button class="text-gray-600 hover:text-primary-600">
+                            <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-primary-500">
+                                <label for="header-search" class="sr-only">Cari</label>
+                                <input
+                                    type="search"
+                                    id="header-search"
+                                    name="q"
+                                    class="bg-transparent focus:outline-none text-sm text-gray-600 placeholder-gray-400 w-40"
+                                    placeholder="Cari kelas atau artikel..."
+                                >
+                                <button type="submit" class="text-gray-500 hover:text-primary-600 transition">
+                                    <i class="fas fa-search h-4 w-4"></i>
+                                </button>
+                            </form>
+                            <a href="{{ route('search') }}" class="md:hidden text-gray-600 hover:text-primary-600">
                                 <i class="fas fa-search h-5 w-5"></i>
-                            </button>
+                            </a>
                             @auth
                             <!-- kalo admin ke /admin, kalo user ke /dashboard -->
                                 <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}"
@@ -111,11 +125,24 @@
                     <i class="fas fa-times h-6 w-6"></i>
                 </button>
             </div>
+            <form action="{{ route('search') }}" method="GET" class="mb-6">
+                <label for="mobile-search" class="sr-only">Cari</label>
+                <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2">
+                    <i class="fas fa-search text-gray-400"></i>
+                    <input
+                        type="search"
+                        id="mobile-search"
+                        name="q"
+                        class="flex-1 focus:outline-none text-sm text-gray-700 placeholder-gray-400"
+                        placeholder="Cari kelas atau artikel..."
+                    >
+                </div>
+            </form>
             <nav class="flex flex-col space-y-4">
                 @if (isset($articleCategories))
                     @foreach ($articleCategories as $category)
-                        <a href="{{ route('article.category', $category) }}"
-                            class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-60 transition">{{ $category }}</a>
+                        <a href="{{ route('article.category', $category->slug) }}"
+                            class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-60 transition">{{ $category->name }}</a>
                     @endforeach
                 @endif
             </nav>

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin - Kelas Digital')</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-rich-text::styles theme="richtextlaravel" />
 </head>
 
 <body class="h-full font-sans">
@@ -35,6 +37,11 @@
                     <i class="fas fa-book-open mr-3 text-base"></i>
                     Manage Courses
                 </a>
+                <a href="{{ route('admin.course-categories.index') }}"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.course-categories.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <i class="fas fa-sitemap mr-3 text-base"></i>
+                    Course Categories
+                </a>
                 <a href="{{ route('admin.lessons.index') }}"
                     class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.lessons.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">
                     <i class="fas fa-list mr-3 text-base"></i>
@@ -44,6 +51,16 @@
                     class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.articles.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">
                     <i class="fas fa-file-alt mr-3 text-base"></i>
                     Manage Articles
+                </a>
+                <a href="{{ route('admin.article-categories.index') }}"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.article-categories.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <i class="fas fa-folder-open mr-3 text-base"></i>
+                    Article Categories
+                </a>
+                <a href="{{ route('admin.tags.index') }}"
+                    class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.tags.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <i class="fas fa-tags mr-3 text-base"></i>
+                    Tags
                 </a>
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">

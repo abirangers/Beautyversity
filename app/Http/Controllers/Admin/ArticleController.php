@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
+use App\Models\ArticleCategory;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ArticleController extends Controller
 {
@@ -12,7 +17,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = \App\Models\Article::latest()->paginate(10);
+        $articles = Article::with('categories', 'tags')->latest()->paginate(10);
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -21,7 +26,10 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('admin.articles.create');
+        $categories = ArticleCategory::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+
+        return view('admin.articles.create', compact('categories', 'tags'));
     }
 
     /**
@@ -29,15 +37,26 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        if ($request->filled('slug')) {
+            $request->merge([
+                'slug' => Str::slug($request->input('slug')),
+            ]);
+        }
+
+        $data = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required',
+            'slug' => 'required|string|max:255|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/|unique:articles,slug',
+            'content_format' => 'required|string|in:wordpress,rich_text',
+            'content' => 'nullable|required_if:content_format,wordpress',
+            'body' => 'nullable|required_if:content_format,rich_text',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'author' => 'required|string|max:255',
-            'category' => 'nullable|string|max:255',
-            'tags' => 'nullable|string',
             'excerpt' => 'nullable|string',
             'post_type' => 'nullable|string|max:255',
+            'categories' => 'required|array|min:1',
+            'categories.*' => 'exists:article_categories,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         $thumbnail = 'default-article.jpg';
@@ -45,16 +64,20 @@ class ArticleController extends Controller
             $thumbnail = $request->file('thumbnail')->store('articles', 'public');
         }
 
-        \App\Models\Article::create([
-            'title' => $request->title,
-            'content' => $request->content,
+        $article = Article::create([
+            'content_format' => $data['content_format'],
+            'title' => $data['title'],
+            'slug' => $data['slug'],
+            'content' => $data['content'] ?? null,
+            'body' => $data['body'] ?? null,
             'thumbnail' => $thumbnail,
-            'author' => $request->author,
-            'category' => $request->category,
-            'tags' => $request->tags,
-            'excerpt' => $request->excerpt,
-            'post_type' => $request->post_type,
+            'author' => $data['author'],
+            'excerpt' => $data['excerpt'] ?? null,
+            'post_type' => $data['post_type'] ?? 'post',
         ]);
+
+        $article->categories()->sync($data['categories']);
+        $article->tags()->sync($data['tags'] ?? []);
 
         return redirect()->route('admin.articles.index')->with('success', 'Article created successfully.');
     }
@@ -64,7 +87,9 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $article = \App\Models\Article::findOrFail($id);
+        $article = Article::with('categories', 'tags')
+            ->withRichText('body')
+            ->findOrFail($id);
         return view('admin.articles.show', compact('article'));
     }
 
@@ -73,8 +98,13 @@ class ArticleController extends Controller
      */
     public function edit(string $id)
     {
-        $article = \App\Models\Article::findOrFail($id);
-        return view('admin.articles.edit', compact('article'));
+        $article = Article::with('categories', 'tags')
+            ->withRichText('body')
+            ->findOrFail($id);
+        $categories = ArticleCategory::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+
+        return view('admin.articles.edit', compact('article', 'categories', 'tags'));
     }
 
     /**
@@ -82,34 +112,54 @@ class ArticleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
+        if ($request->filled('slug')) {
+            $request->merge([
+                'slug' => Str::slug($request->input('slug')),
+            ]);
+        }
+
+        $data = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required',
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
+                Rule::unique('articles', 'slug')->ignore($id),
+            ],
+            'content_format' => 'required|string|in:wordpress,rich_text',
+            'content' => 'nullable|required_if:content_format,wordpress',
+            'body' => 'nullable|required_if:content_format,rich_text',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'author' => 'required|string|max:255',
-            'category' => 'nullable|string|max:255',
-            'tags' => 'nullable|string',
             'excerpt' => 'nullable|string',
             'post_type' => 'nullable|string|max:255',
+            'categories' => 'required|array|min:1',
+            'categories.*' => 'exists:article_categories,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
-        $article = \App\Models\Article::findOrFail($id);
+        $article = Article::findOrFail($id);
 
-        $data = [
-            'title' => $request->title,
-            'content' => $request->content,
-            'author' => $request->author,
-            'category' => $request->category,
-            'tags' => $request->tags,
-            'excerpt' => $request->excerpt,
-            'post_type' => $request->post_type,
+        $payload = [
+            'content_format' => $data['content_format'],
+            'title' => $data['title'],
+            'slug' => $data['slug'],
+            'content' => $data['content'] ?? null,
+            'body' => $data['body'] ?? null,
+            'author' => $data['author'],
+            'excerpt' => $data['excerpt'] ?? null,
+            'post_type' => $data['post_type'] ?? 'post',
         ];
 
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = $request->file('thumbnail')->store('articles', 'public');
+            $payload['thumbnail'] = $request->file('thumbnail')->store('articles', 'public');
         }
 
-        $article->update($data);
+        $article->update($payload);
+        $article->categories()->sync($data['categories']);
+        $article->tags()->sync($data['tags'] ?? []);
 
         return redirect()->route('admin.articles.index')->with('success', 'Article updated successfully.');
     }
@@ -119,7 +169,7 @@ class ArticleController extends Controller
      */
     public function destroy(string $id)
     {
-        $article = \App\Models\Article::findOrFail($id);
+        $article = Article::findOrFail($id);
         $article->delete();
 
         return redirect()->route('admin.articles.index')->with('success', 'Article deleted successfully.');

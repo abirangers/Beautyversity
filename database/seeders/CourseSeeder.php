@@ -12,9 +12,11 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
+        $categoryIds = \App\Models\CourseCategory::pluck('id', 'slug');
+
         // Create sample cosmetic-related courses
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Basic Skincare Routine: From Zero to Hero'],
+            ['slug' => 'basic-skincare-routine-from-zero-to-hero'],
             [
                 'title' => 'Basic Skincare Routine: From Zero to Hero',
                 'instructor' => 'Dr. Amanda Larasati',
@@ -22,14 +24,14 @@ class CourseSeeder extends Seeder
                 'price' => 150000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'u-kE8gRENqI',
-                'full_video_ids' => json_encode(['abc1', 'def2', 'ghi3']),
-                'category' => 'Skincare',
+                'full_video_ids' => ['abc1', 'def2', 'ghi3'],
+                'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Beginner',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Mengenal Bahan Skincare: Retinol, AHA, BHA'],
+            ['slug' => 'mengenal-bahan-skincare-retinol-aha-bha'],
             [
                 'title' => 'Mengenal Bahan Skincare: Retinol, AHA, BHA',
                 'instructor' => 'Dr. Sarah Wijaya',
@@ -37,14 +39,14 @@ class CourseSeeder extends Seeder
                 'price' => 180000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['jkl4', 'mno5', 'pqr6', 'stu7']),
-                'category' => 'Skincare',
+                'full_video_ids' => ['jkl4', 'mno5', 'pqr6', 'stu7'],
+                'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Intermediate',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Makeup Artistry: Dasar-dasar Makeup'],
+            ['slug' => 'makeup-artistry-dasar-dasar-makeup'],
             [
                 'title' => 'Makeup Artistry: Dasar-dasar Makeup',
                 'instructor' => 'Diana Kartika',
@@ -52,14 +54,14 @@ class CourseSeeder extends Seeder
                 'price' => 200000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['vwx8', 'yz9', 'abc10', 'def11']),
-                'category' => 'Makeup',
+                'full_video_ids' => ['vwx8', 'yz9', 'abc10', 'def11'],
+                'course_category_id' => $categoryIds['makeup'] ?? null,
                 'level' => 'Beginner',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Hair Care: Perawatan Rambut Kering dan Rusak'],
+            ['slug' => 'hair-care-perawatan-rambut-kering-dan-rusak'],
             [
                 'title' => 'Hair Care: Perawatan Rambut Kering dan Rusak',
                 'instructor' => 'Dr. Rina Setiawan',
@@ -67,14 +69,14 @@ class CourseSeeder extends Seeder
                 'price' => 120000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['ghi12', 'jkl13', 'mno14']),
-                'category' => 'Hair Care',
+                'full_video_ids' => ['ghi12', 'jkl13', 'mno14'],
+                'course_category_id' => $categoryIds['hair-care'] ?? null,
                 'level' => 'Beginner',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Anti-Aging Skincare: Lawan Tanda-tanda Penuaan'],
+            ['slug' => 'anti-aging-skincare-lawan-tanda-tanda-penuaan'],
             [
                 'title' => 'Anti-Aging Skincare: Lawan Tanda-tanda Penuaan',
                 'instructor' => 'Dr. Michael Tanuwijaya',
@@ -82,14 +84,14 @@ class CourseSeeder extends Seeder
                 'price' => 250000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['pqr15', 'stu16', 'vwx17', 'yz18', 'abc19']),
-                'category' => 'Skincare',
+                'full_video_ids' => ['pqr15', 'stu16', 'vwx17', 'yz18', 'abc19'],
+                'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Advanced',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Natural Beauty: Makeup dengan Bahan Alami'],
+            ['slug' => 'natural-beauty-makeup-dengan-bahan-alami'],
             [
                 'title' => 'Natural Beauty: Makeup dengan Bahan Alami',
                 'instructor' => 'Maya Sari',
@@ -97,14 +99,14 @@ class CourseSeeder extends Seeder
                 'price' => 160000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['def20', 'ghi21', 'jkl22']),
-                'category' => 'Makeup',
+                'full_video_ids' => ['def20', 'ghi21', 'jkl22'],
+                'course_category_id' => $categoryIds['makeup'] ?? null,
                 'level' => 'Intermediate',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Sunscreen: Panduan Lengkap Perlindungan UV'],
+            ['slug' => 'sunscreen-panduan-lengkap-perlindungan-uv'],
             [
                 'title' => 'Sunscreen: Panduan Lengkap Perlindungan UV',
                 'instructor' => 'Dr. Fitriani Kusuma',
@@ -112,14 +114,14 @@ class CourseSeeder extends Seeder
                 'price' => 100000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['mno23', 'pqr24']),
-                'category' => 'Skincare',
+                'full_video_ids' => ['mno23', 'pqr24'],
+                'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Beginner',
             ]
         );
         
         \App\Models\Course::updateOrCreate(
-            ['title' => 'Color Theory dalam Makeup'],
+            ['slug' => 'color-theory-dalam-makeup'],
             [
                 'title' => 'Color Theory dalam Makeup',
                 'instructor' => 'Bella Anggraini',
@@ -127,8 +129,8 @@ class CourseSeeder extends Seeder
                 'price' => 220000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => json_encode(['stu25', 'vwx26', 'yz27', 'abc28']),
-                'category' => 'Makeup',
+                'full_video_ids' => ['stu25', 'vwx26', 'yz27', 'abc28'],
+                'course_category_id' => $categoryIds['makeup'] ?? null,
                 'level' => 'Advanced',
             ]
         );

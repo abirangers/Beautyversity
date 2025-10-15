@@ -115,7 +115,7 @@
                                     <p class="text-yellow-700 text-sm mt-1">Pembayaran Anda sedang kami verifikasi.</p>
                                 </div>
                             @else
-                                <form method="post" action="{{ route('course.enroll', $course->id) }}">
+                                <form method="post" action="{{ route('course.enroll', $course->slug) }}">
                                     @csrf
                                     <button type="submit"
                                         class="w-full px-6 py-3 text-lg font-semibold text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-all duration-300 shadow-md">

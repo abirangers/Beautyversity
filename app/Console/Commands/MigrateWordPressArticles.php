@@ -6,6 +6,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Article;
+use App\Models\ArticleCategory;
+use App\Models\Tag;
 
 class MigrateWordPressArticles extends Command
 {
@@ -26,6 +29,7 @@ class MigrateWordPressArticles extends Command
                 p.post_title as title,
                 p.post_content as content,
                 p.post_excerpt as excerpt,
+                p.post_name as slug,
                 p.post_date as created_at,
                 p.post_modified as updated_at,
                 p.post_type as post_type,
@@ -51,21 +55,48 @@ class MigrateWordPressArticles extends Command
             $tags = $this->getTags($wp_content->wp_id, $wp_connection);
 
             // Insert into Laravel articles table
-            $article = \App\Models\Article::updateOrCreate(
+            $article = Article::updateOrCreate(
                 ['title' => $wp_content->title],
                 [
                     'title' => $wp_content->title,
+                    'slug' => $wp_content->slug ?: Str::slug($wp_content->title),
                     'content' => $processed_content,
+                    'content_format' => 'wordpress',
                     'excerpt' => $wp_content->excerpt,
                     'author' => $wp_content->author ?? 'Admin',
-                    'category' => implode(',', $categories),
-                    'tags' => implode(',', $tags),
                     'post_type' => $wp_content->post_type, // Tambahkan post_type
                     'thumbnail' => $featured_image_path ?? 'default-article.jpg',
                     'created_at' => $wp_content->created_at,
                     'updated_at' => $wp_content->updated_at,
                 ]
             );
+
+            $categoryIds = collect($categories)
+                ->map(function ($name) {
+                    $slug = Str::slug($name);
+                    return ArticleCategory::firstOrCreate([
+                        'slug' => $slug,
+                    ], [
+                        'name' => $name,
+                        'slug' => $slug,
+                    ])->id;
+                })
+                ->all();
+
+            $tagIds = collect($tags)
+                ->map(function ($name) {
+                    $slug = Str::slug($name);
+                    return Tag::firstOrCreate([
+                        'slug' => $slug,
+                    ], [
+                        'name' => $name,
+                        'slug' => $slug,
+                    ])->id;
+                })
+                ->all();
+
+            $article->categories()->sync($categoryIds);
+            $article->tags()->sync($tagIds);
 
             $this->info("Migrated {$wp_content->post_type}: {$wp_content->title}");
         }

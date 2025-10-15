@@ -24,7 +24,7 @@
                     @foreach ($courses as $course)
                         <div
                             class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 flex flex-col">
-                            <a href="{{ route('course.show', $course->id) }}">
+                            <a href="{{ route('course.show', $course->slug) }}">
                                 <img src="https://via.placeholder.com/600x400.png/E6B4B8/333333?text={{ urlencode($course->title) }}"
                                     alt="{{ $course->title }}" class="w-full h-48 object-cover">
                             </a>
@@ -34,7 +34,7 @@
                                     oleh {{ $course->instructor }}
                                 </p>
                                 <div class="mt-auto">
-                                    <a href="{{ route('course.show', $course->id) }}"
+                                    <a href="{{ route('course.show', $course->slug) }}"
                                         class="w-full text-center block px-5 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors duration-300">
                                         Mulai Belajar
                                     </a>
