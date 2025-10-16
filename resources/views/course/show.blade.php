@@ -59,15 +59,17 @@
                     <h2 class="text-3xl font-bold text-gray-800 mb-6">Materi Pembelajaran</h2>
                     <div class="space-y-4">
                         @forelse($lessonsByModule as $module => $lessons)
-                            <div class="module border border-gray-200 rounded-lg">
-                                <div class="module-header bg-gray-50 hover:bg-gray-100 p-4 flex justify-between items-center cursor-pointer module-toggle"
-                                    data-target="module-{{ Str::slug($module) }}">
+                            <div class="module border border-gray-200 rounded-lg" x-data="{ open: true }">
+                                <div @click="open = !open" 
+                                    class="module-header bg-gray-50 hover:bg-gray-100 p-4 flex justify-between items-center cursor-pointer">
                                     <h3 class="text-lg font-semibold text-gray-800">{{ $module }}</h3>
-                                    <i class="fas fa-chevron-down text-gray-500 module-icon transition-transform duration-300 text-xl"></i>
+                                    <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300 text-xl" 
+                                       :class="{ 'rotate-180': open }"></i>
                                 </div>
 
-                                <div id="module-{{ Str::slug($module) }}"
-                                    class="module-content hidden border-t border-gray-200 p-4 space-y-3">
+                                <div x-show="open" 
+                                     x-collapse
+                                     class="module-content border-t border-gray-200 p-4 space-y-3">
                                     @foreach ($lessons as $lesson)
                                         <div class="lesson-item flex items-center">
                                             <div class="flex-shrink-0 mr-4">
@@ -142,25 +144,4 @@
 
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const moduleToggles = document.querySelectorAll('.module-toggle');
-
-            moduleToggles.forEach(toggle => {
-                toggle.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-target');
-                    const targetContent = document.getElementById(targetId);
-                    const icon = this.querySelector('.module-icon');
-
-                    targetContent.classList.toggle('hidden');
-
-                    if (targetContent.classList.contains('hidden')) {
-                        icon.style.transform = 'rotate(0deg)';
-                    } else {
-                        icon.style.transform = 'rotate(180deg)';
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

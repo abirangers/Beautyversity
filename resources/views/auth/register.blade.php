@@ -59,6 +59,15 @@
                     </div>
 
                     <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" id="username" name="username" value="{{ old('username') }}" required
+                            autocomplete="username"
+                            placeholder="Pilih username unik (3-20 karakter, huruf, angka, _ atau -)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        <p class="mt-1 text-sm text-gray-500">Hanya huruf, angka, underscore (_) dan dash (-) yang diperbolehkan</p>
+                    </div>
+
+                    <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Alamat Email</label>
                         <input type="email" id="email" name="email" value="{{ old('email') }}" required
                             autocomplete="email"

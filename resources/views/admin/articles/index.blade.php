@@ -32,8 +32,6 @@
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Category</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Post Type</th>
-                        <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Published
                         </th>
                         <th scope="col"
@@ -45,8 +43,8 @@
                     @forelse($articles as $article)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $article->title }}</div>
-                                <div class="text-xs text-gray-500 mt-1">{{ $article->slug }}</div>
+                                <!-- hyperlink to the article public page-->
+                                <a href="{{ route('article.show', $article->slug) }}" class="text-sm font-medium text-gray-900 hover:text-primary-600 transition-colors">{{ $article->title }}</a>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->author }}</div>
@@ -55,9 +53,6 @@
                                 <div class="text-sm text-gray-700">
                                     {{ $article->categories->isNotEmpty() ? $article->categories->pluck('name')->join(', ') : 'N/A' }}
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-700">{{ $article->post_type ?? 'post' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->created_at->format('d M Y') }}</div>

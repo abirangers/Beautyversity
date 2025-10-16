@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseCategory;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\Middleware;
 
 class CourseController extends Controller
 {
+    public static function middleware(): array
+    {
+        return [
+            'auth',
+            'can:view courses',
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -23,6 +32,7 @@ class CourseController extends Controller
      */
     public function create()
     {
+        $this->authorize('create courses');
         $categories = CourseCategory::orderBy('name')->get();
 
         return view('admin.courses.create', compact('categories'));
@@ -33,6 +43,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create courses');
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:courses,slug',
@@ -85,6 +96,7 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('edit courses');
         $course = Course::with('category')->findOrFail($id);
         $categories = CourseCategory::orderBy('name')->get();
 
@@ -96,6 +108,7 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('edit courses');
         $course = Course::findOrFail($id);
         
         $data = $request->validate([
@@ -141,6 +154,7 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete courses');
         $course = Course::findOrFail($id);
         $course->delete();
 

@@ -18,9 +18,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'login' => ['required'], // Bisa username atau email
             'password' => ['required'],
         ]);
+
+        // Cek apakah input adalah email atau username
+        $field = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $credentials[$field] = $credentials['login'];
+        unset($credentials['login']);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -32,8 +37,8 @@ class AuthController extends Controller
                 $user->save();
             }
 
-            // Redirect based on role
-            if ($user && $user->role === 'admin') {
+            // Redirect based on role using Spatie roles
+            if ($user && $user->isAdmin()) {
                 return redirect()->intended('/admin');
             }
 
@@ -41,8 +46,8 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'login' => 'The provided credentials do not match our records.',
+        ])->onlyInput('login');
     }
 
     public function showRegister()
@@ -54,16 +59,20 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'min:3', 'max:20', 'unique:users', 'regex:/^[a-zA-Z0-9_-]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'student',
         ]);
+
+        // Assign student role
+        $user->assignRole('student');
 
         Auth::login($user);
 

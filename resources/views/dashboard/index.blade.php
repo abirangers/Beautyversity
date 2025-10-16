@@ -6,12 +6,59 @@
 
     <div class="bg-gray-50 py-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold text-gray-900">
-                Selamat Datang, {{ auth()->user()->name }}!
-            </h1>
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900">
+                        Selamat Datang, {{ auth()->user()->name }}!
+                    </h1>
+                </div>
+                <div class="mt-4 sm:mt-0">
+                    <a href="{{ route('profile.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-user mr-2"></i>
+                        My Profile
+                    </a>
+                </div>
+            </div>
             <p class="mt-2 text-lg text-gray-600">
-                Lanjutkan perjalanan belajarmu. Pilih kelas di bawah ini untuk memulai.
+                @if(auth()->user()->isAdmin())
+                    Anda masuk sebagai Administrator. Kelola platform Kelas Digital dari dashboard admin.
+                @elseif(auth()->user()->isInstructor())
+                    Anda masuk sebagai Instruktur. Kelola kursus dan materi pembelajaran Anda.
+                @elseif(auth()->user()->isContentManager())
+                    Anda masuk sebagai Content Manager. Kelola artikel dan konten platform Kelas Digital.
+                @else
+                    Lanjutkan perjalanan belajarmu. Pilih kelas di bawah ini untuk memulai.
+                @endif
             </p>
+            
+            {{-- Role-based navigation --}}
+            @if(auth()->user()->isAdmin() || auth()->user()->isInstructor() || auth()->user()->isContentManager())
+                <div class="mt-6">
+                    @can('access admin panel')
+                    <a href="{{ route('admin.dashboard') }}" 
+                       class="inline-flex items-center px-5 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>
+                        Dashboard Admin
+                    </a>
+                    @endcan
+                    
+                    @can('view courses')
+                    <a href="{{ route('admin.courses.index') }}" 
+                       class="ml-3 inline-flex items-center px-5 py-2.5 bg-gray-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-book mr-2"></i>
+                        Kelola Kursus
+                    </a>
+                    @endcan
+                    
+                    @can('view articles')
+                    <a href="{{ route('admin.articles.index') }}" 
+                       class="ml-3 inline-flex items-center px-5 py-2.5 bg-green-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-green-700 transition-colors">
+                        <i class="fas fa-newspaper mr-2"></i>
+                        Kelola Artikel
+                    </a>
+                    @endcan
+                </div>
+            @endif
         </div>
     </div>
 

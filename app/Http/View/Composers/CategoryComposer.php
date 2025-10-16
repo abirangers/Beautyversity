@@ -18,7 +18,7 @@ class CategoryComposer
         $categories = ArticleCategory::whereHas('articles')
             ->withCount('articles')
             ->orderBy('name')
-            ->limit(7)
+            ->limit(4)
             ->get();
 
         $view->with('articleCategories', $categories);
