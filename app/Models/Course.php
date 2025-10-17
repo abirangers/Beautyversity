@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use RalphJSmit\Laravel\SEO\Support\HasSEO;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Course extends Model
 {
     use HasFactory;
+    use HasSEO;
+    use Sluggable;
 
     protected $fillable = [
         'title',
@@ -27,57 +31,23 @@ class Course extends Model
         'full_video_ids' => 'array',
     ];
 
-    protected static function booted(): void
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
     {
-        static::saving(function (Course $course) {
-            // Jika slug dirty tapi kosong/blank, set ke null agar masuk logic generate dari title
-            if ($course->isDirty('slug') && blank($course->slug)) {
-                $course->slug = null;
-            }
-
-            // Jika slug dirty dan ada isinya, pastikan unique
-            if ($course->isDirty('slug') && filled($course->slug)) {
-                $course->slug = $course->makeSlugUnique($course->slug);
-                return;
-            }
-
-            // Jika slug masih blank, generate dari title
-            if (blank($course->slug)) {
-                $course->slug = $course->generateUniqueSlugFromTitle($course->title);
-            }
-        });
-    }
-
-    protected function generateUniqueSlugFromTitle(string $title): string
-    {
-        $baseSlug = Str::slug($title) ?: 'course';
-
-        return $this->makeSlugUnique($baseSlug);
-    }
-
-    protected function makeSlugUnique(string $baseSlug): string
-    {
-        $base = trim($baseSlug) !== '' ? $baseSlug : 'course';
-        $slug = $base;
-        $counter = 1;
-
-        while (
-            static::where('slug', $slug)
-                ->when($this->exists, fn ($query) => $query->where('id', '!=', $this->id))
-                ->exists()
-        ) {
-            $slug = "{$base}-{$counter}";
-            $counter++;
-        }
-
-        return $slug;
-    }
-
-    public function setSlugAttribute($value): void
-    {
-        // Ubah empty string jadi null agar logic blank() berfungsi dengan benar
-        $slugified = Str::slug($value);
-        $this->attributes['slug'] = filled($slugified) ? $slugified : null;
+        return [
+            'slug' => [
+                'source' => 'title',
+                'onUpdate' => false, // Slug tidak berubah saat update
+                'unique' => true,
+                'separator' => '-',
+                'maxLength' => 100,
+                'maxLengthKeepWords' => true,
+            ]
+        ];
     }
 
     /**
@@ -109,5 +79,22 @@ class Course extends Model
     public function category()
     {
         return $this->belongsTo(CourseCategory::class, 'course_category_id');
+    }
+
+    /**
+     * Get dynamic SEO data for this course
+     */
+    public function getDynamicSEOData(): \RalphJSmit\Laravel\SEO\Support\SEOData
+    {
+        return new \RalphJSmit\Laravel\SEO\Support\SEOData(
+            title: $this->title,
+            description: $this->description ?: 'Kursus online berkualitas tinggi di Kelas Digital. Pelajari dengan instruktur berpengalaman dan dapatkan sertifikat setelah menyelesaikan kursus.',
+            author: $this->instructor ?: 'Kelas Digital Team',
+            image: $this->thumbnail ?: '/logo.webp',
+            url: route('course.show', $this->slug),
+            published_time: $this->created_at,
+            modified_time: $this->updated_at,
+            section: $this->category?->name,
+        );
     }
 }

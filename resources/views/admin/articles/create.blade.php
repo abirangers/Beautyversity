@@ -29,6 +29,7 @@
                         <div>
                             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
                             <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                                placeholder="e.g., 5 Tips Skincare untuk Kulit Berminyak"
                                 class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                             @error('title')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -37,10 +38,10 @@
 
                         <div>
                             <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-                            <input type="text" name="slug" id="slug" value="{{ old('slug') }}" required
-                                class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                                placeholder="contoh: tips-belajar-laravel">
-                            <p class="mt-1 text-xs text-gray-500">URL akan menggunakan slug ini. Gunakan huruf kecil dan pisahkan kata dengan tanda hubung.</p>
+                            <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
+                                placeholder="e.g., tips-skincare-kulit-berminyak (optional - auto-generated from title)"
+                                class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            <p class="mt-1 text-xs text-gray-500">Optional: Leave blank to auto-generate from title. Use lowercase letters and hyphens for manual override.</p>
                             @error('slug')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -50,6 +51,7 @@
                     <div>
                         <label for="author" class="block text-sm font-medium text-gray-700 mb-2">Author</label>
                         <input type="text" name="author" id="author" value="{{ old('author') }}" required
+                            placeholder="e.g., Dr. Amanda Larasati, Beauty Expert"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('author')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -85,7 +87,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="mt-1 text-xs text-gray-500">Opsional: pilih beberapa tag untuk artikel ini.</p>
+                        <p class="mt-1 text-xs text-gray-500">Optional: select multiple tags for this article.</p>
                         @error('tags')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -97,6 +99,7 @@
                     <div>
                         <label for="post_type" class="block text-sm font-medium text-gray-700 mb-2">Post Type</label>
                         <input type="text" name="post_type" id="post_type" value="{{ old('post_type', 'post') }}"
+                            placeholder="e.g., post, page, tutorial"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('post_type')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -113,10 +116,11 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <label for="excerpt" class="block text-sm font-medium text-gray-700 mb-2">Ringkasan Artikel</label>
+                        <label for="excerpt" class="block text-sm font-medium text-gray-700 mb-2">Article Summary</label>
                         <textarea name="excerpt" id="excerpt" rows="3"
+                            placeholder="Brief summary of the article that will be displayed on the homepage..."
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">{{ old('excerpt') }}</textarea>
-                        <p class="mt-1 text-xs text-gray-500">Opsional: Ringkasan singkat dari artikel (akan ditampilkan sebelum isi lengkap artikel)</p>
+                        <p class="mt-1 text-xs text-gray-500">Optional: Brief summary of the article (will be displayed before the full content)</p>
                         @error('excerpt')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

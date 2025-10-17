@@ -37,8 +37,7 @@ class AuthController extends Controller
                 $user->save();
             }
 
-            // Redirect based on role using Spatie roles
-            if ($user && $user->isAdmin()) {
+            if ($user && ($user->isSuperAdmin() || $user->isAdmin())) {
                 return redirect()->intended('/admin');
             }
 

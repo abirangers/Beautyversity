@@ -71,6 +71,10 @@ class RolePermissionSeeder extends Seeder
             'view dashboard',
             'view reports',
             
+            // System Management (Super-Admin only)
+            'manage roles',
+            'manage permissions',
+            
             // Student specific permissions
             'enroll courses',
             'view enrolled courses',
@@ -176,9 +180,14 @@ class RolePermissionSeeder extends Seeder
             'view reports',
         ]);
 
-        // Super Admin role - gets all permissions via Gate::before rule
+        // Super Admin role - gets all permissions via Gate::before rule + specific system permissions
         $superAdminRole = Role::updateOrCreate(['name' => 'Super-Admin']);
-        // All permissions are granted automatically via Gate::before in AuthServiceProvider
+        $superAdminRole->syncPermissions([
+            // System Management permissions
+            'manage roles',
+            'manage permissions',
+            // All other permissions are granted automatically via Gate::before in AuthServiceProvider
+        ]);
 
         $this->command->info('Roles and permissions created successfully!');
     }

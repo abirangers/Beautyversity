@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name', 'Kelas Digital'))</title>
+    @hasSection('seo')
+        @yield('seo')
+    @else
+        {!! seo() !!}
+    @endif
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,11 +36,11 @@
                         <span>Bandung - Jawa Barat, Indonesia</span>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="#" class="hover:text-primary-400 transition"><i
+                        <a href="https://www.facebook.com/beautyversitydotid" class="hover:text-primary-400 transition" target="_blank"><i
                                 class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-youtube"></i></a>
+                        <a href="https://x.com/beautyversityid" class="hover:text-primary-400 transition" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/beautyversity_id" class="hover:text-primary-400 transition" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@beautyversitydotid" class="hover:text-primary-400 transition" target="_blank"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
@@ -119,10 +123,11 @@
                                         <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                             <i class="fas fa-user mr-2"></i>My Profile
                                         </a>
+                                        
                                         <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                                         </a>
-                                        @if(Auth::user()->isAdmin())
+                                        @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
                                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                             <i class="fas fa-cog mr-2"></i>Admin Panel
                                         </a>

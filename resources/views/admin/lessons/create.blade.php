@@ -38,34 +38,44 @@
 
                 <div class="md:col-span-2">
                     <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Lesson Title</label>
-                    <input type="text" name="title" id="title" value="{{ old('title') }}" required class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                    <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                        placeholder="e.g., Introduction to Skincare, Basic Makeup Techniques"
+                        class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     @error('title') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
                 
                 <div class="md:col-span-2">
                     <label for="youtube_video_id" class="block text-sm font-medium text-gray-700 mb-2">YouTube Video ID</label>
-                    <input type="text" name="youtube_video_id" id="youtube_video_id" value="{{ old('youtube_video_id') }}" required class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                    <input type="text" name="youtube_video_id" id="youtube_video_id" value="{{ old('youtube_video_id') }}" required
+                        placeholder="e.g., dQw4w9WgXcQ"
+                        class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     <p class="mt-2 text-xs text-gray-500">e.g., for https://www.youtube.com/watch?v=dQw4w9WgXcQ, the ID is dQw4w9WgXcQ</p>
                     @error('youtube_video_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label for="module" class="block text-sm font-medium text-gray-700 mb-2">Module</label>
-                    <input type="text" name="module" id="module" value="{{ old('module') }}" required class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                    <input type="text" name="module" id="module" value="{{ old('module') }}" required
+                        placeholder="e.g., Introduction, Advanced Techniques, Final Project"
+                        class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     <p class="mt-2 text-xs text-gray-500">Group lessons under a module name (e.g., "Introduction").</p>
                     @error('module') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
                 
                 <div>
                     <label for="order" class="block text-sm font-medium text-gray-700 mb-2">Order</label>
-                    <input type="number" name="order" id="order" value="{{ old('order', 0) }}" required class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                    <input type="number" name="order" id="order" value="{{ old('order', 0) }}" required
+                        placeholder="e.g., 1, 2, 3"
+                        class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     <p class="mt-2 text-xs text-gray-500">The display order of the lesson (e.g., 1, 2, 3).</p>
                     @error('order') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">Duration (in minutes)</label>
-                    <input type="number" name="duration" id="duration" value="{{ old('duration') }}" class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                    <input type="number" name="duration" id="duration" value="{{ old('duration') }}"
+                        placeholder="e.g., 15, 30, 45"
+                        class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                      @error('duration') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 

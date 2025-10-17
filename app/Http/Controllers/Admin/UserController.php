@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -12,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = \App\Models\User::latest()->paginate(20);
+        $users = User::with('roles')->latest()->paginate(20);
         return view('admin.users.index', compact('users'));
     }
 
@@ -21,7 +24,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::whereIn('name', ['student', 'instructor', 'content-manager', 'admin'])->get();
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -31,17 +35,21 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:20|unique:users|regex:/^[a-zA-Z0-9_-]+$/',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,student',
+            'role' => 'required|exists:roles,name',
         ]);
 
-        $user = \App\Models\User::create([
+        $user = User::create([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'role' => $request->role,
+            'password' => Hash::make($request->password),
         ]);
+
+        // Assign role using Spatie
+        $user->assignRole($request->role);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
@@ -51,7 +59,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::with('roles')->findOrFail($id);
         return view('admin.users.show', compact('user'));
     }
 
@@ -60,8 +68,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user = \App\Models\User::findOrFail($id);
-        return view('admin.users.edit', compact('user'));
+        $user = User::with('roles')->findOrFail($id);
+        $roles = Role::whereIn('name', ['student', 'instructor', 'content-manager', 'admin'])->get();
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -69,27 +78,31 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:20|unique:users,username,' . $user->id . '|regex:/^[a-zA-Z0-9_-]+$/',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,student',
+            'role' => 'required|exists:roles,name',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $data = [
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
-            'role' => $request->role,
         ];
 
         // Only update password if provided
         if ($request->filled('password')) {
-            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+            $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
+
+        // Update role using Spatie
+        $user->syncRoles([$request->role]);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
@@ -99,13 +112,15 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
 
         // Prevent deleting the current admin user
-        if ($user->id == auth()->id) {
+        if ($user->id == auth()->id()) {
             return redirect()->back()->with('error', 'You cannot delete yourself.');
         }
 
+        // Remove all roles before deleting user
+        $user->syncRoles([]);
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');

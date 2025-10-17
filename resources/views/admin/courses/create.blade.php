@@ -33,6 +33,7 @@
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Course Title</label>
                         <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                            placeholder="e.g., Basic Skincare Routine: From Zero to Hero"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('title')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -43,6 +44,7 @@
                     <div>
                         <label for="instructor" class="block text-sm font-medium text-gray-700 mb-2">Instructor</label>
                         <input type="text" name="instructor" id="instructor" value="{{ old('instructor') }}" required
+                            placeholder="e.g., Dr. Amanda Larasati"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('instructor')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -53,6 +55,7 @@
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (Rp)</label>
                         <input type="number" name="price" id="price" value="{{ old('price') }}" required
+                            placeholder="e.g., 150000"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('price')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -97,6 +100,7 @@
                             (YouTube)</label>
                         <input type="text" name="trailer_video_id" id="trailer_video_id"
                             value="{{ old('trailer_video_id') }}" required
+                            placeholder="e.g., dQw4w9WgXcQ"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('trailer_video_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -108,6 +112,7 @@
                         <label for="full_video_ids" class="block text-sm font-medium text-gray-700 mb-2">Full Video
                             IDs</label>
                         <input type="text" name="full_video_ids" id="full_video_ids" value="{{ old('full_video_ids') }}"
+                            placeholder="e.g., abcde123, fghij456, klmno789"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         <p class="mt-2 text-xs text-gray-500">Enter YouTube video IDs separated by a comma (e.g., abcde123,
                             fghij456).</p>
@@ -130,6 +135,7 @@
                     <div class="md:col-span-2">
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                         <textarea name="description" id="description" rows="6" required
+                            placeholder="Describe what students will learn in this course, the benefits, and what makes it unique..."
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -25,10 +25,7 @@ class TagController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:tags,name',
-            'slug' => 'nullable|string|max:255|unique:tags,slug',
         ]);
-
-        $data['slug'] = Str::slug($data['slug'] ?? $data['name']);
 
         Tag::create($data);
 
@@ -44,10 +41,7 @@ class TagController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:tags,name,' . $tag->id,
-            'slug' => 'nullable|string|max:255|unique:tags,slug,' . $tag->id,
         ]);
-
-        $data['slug'] = Str::slug($data['slug'] ?? $data['name']);
 
         $tag->update($data);
 

@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
+use RalphJSmit\Laravel\SEO\Support\HasSEO;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Article extends Model
 {
     use HasFactory;
     use HasRichText;
+    use HasSEO;
+    use Sluggable;
 
     protected $fillable = [
         'title',
@@ -28,57 +32,23 @@ class Article extends Model
         'body',
     ];
 
-    protected static function booted(): void
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
     {
-        static::saving(function (Article $article) {
-            // Jika slug dirty tapi kosong/blank, set ke null agar masuk logic generate dari title
-            if ($article->isDirty('slug') && blank($article->slug)) {
-                $article->slug = null;
-            }
-
-            // Jika slug dirty dan ada isinya, pastikan unique
-            if ($article->isDirty('slug') && filled($article->slug)) {
-                $article->slug = $article->makeSlugUnique($article->slug);
-                return;
-            }
-
-            // Jika slug masih blank, generate dari title
-            if (blank($article->slug)) {
-                $article->slug = $article->generateUniqueSlugFromTitle($article->title);
-            }
-        });
-    }
-
-    protected function generateUniqueSlugFromTitle(string $title): string
-    {
-        $baseSlug = Str::slug($title) ?: 'article';
-
-        return $this->makeSlugUnique($baseSlug);
-    }
-
-    protected function makeSlugUnique(string $baseSlug): string
-    {
-        $base = trim($baseSlug) !== '' ? $baseSlug : 'article';
-        $slug = $base;
-        $counter = 1;
-
-        while (
-            static::where('slug', $slug)
-                ->when($this->exists, fn ($query) => $query->where('id', '!=', $this->id))
-                ->exists()
-        ) {
-            $slug = "{$base}-{$counter}";
-            $counter++;
-        }
-
-        return $slug;
-    }
-
-    public function setSlugAttribute($value): void
-    {
-        // Ubah empty string jadi null agar logic blank() berfungsi dengan benar
-        $slugified = Str::slug($value);
-        $this->attributes['slug'] = filled($slugified) ? $slugified : null;
+        return [
+            'slug' => [
+                'source' => 'title',
+                'onUpdate' => false, // Slug tidak berubah saat update
+                'unique' => true,
+                'separator' => '-',
+                'maxLength' => 100,
+                'maxLengthKeepWords' => true,
+            ]
+        ];
     }
 
     public function categories()
@@ -207,5 +177,23 @@ class Article extends Model
     protected function renderWordPressContent(): string
     {
         return $this->processWordPressBlocks($this->content ?? '');
+    }
+
+    /**
+     * Get dynamic SEO data for this article
+     */
+    public function getDynamicSEOData(): \RalphJSmit\Laravel\SEO\Support\SEOData
+    {
+        return new \RalphJSmit\Laravel\SEO\Support\SEOData(
+            title: $this->title,
+            description: $this->excerpt ?: \Str::limit(strip_tags($this->content ?? ''), 160),
+            author: $this->author ?: 'Kelas Digital Team',
+            image: $this->thumbnail ?: '/logo.webp',
+            url: route('article.show', $this->slug),
+            published_time: $this->created_at,
+            modified_time: $this->updated_at,
+            tags: $this->tagNames->toArray(),
+            section: $this->categories->first()?->name,
+        );
     }
 }
