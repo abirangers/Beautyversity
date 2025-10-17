@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         });
         
         // Course category management
-        Route::middleware('can:view categories')->group(function () {
+        Route::middleware('can:view course categories')->group(function () {
             Route::resource('course-categories', AdminCourseCategoryController::class)->except(['show']);
         });
         
@@ -97,7 +97,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         });
         
         // Article category management
-        Route::middleware('can:view categories')->group(function () {
+        Route::middleware('can:view article categories')->group(function () {
             Route::resource('article-categories', AdminArticleCategoryController::class)->except(['show']);
         });
         

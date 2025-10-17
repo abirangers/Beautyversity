@@ -54,11 +54,17 @@ class RolePermissionSeeder extends Seeder
             'approve enrollments',
             'reject enrollments',
             
-            // Category Management
-            'view categories',
-            'create categories',
-            'edit categories',
-            'delete categories',
+            // Article Category Management
+            'view article categories',
+            'create article categories',
+            'edit article categories',
+            'delete article categories',
+            
+            // Course Category Management
+            'view course categories',
+            'create course categories',
+            'edit course categories',
+            'delete course categories',
             
             // Tag Management
             'view tags',
@@ -110,10 +116,11 @@ class RolePermissionSeeder extends Seeder
             'delete articles',
             'publish articles',
             'unpublish articles',
-            'view categories',
-            'create categories',
-            'edit categories',
-            'delete categories',
+            // Article Category Management Only
+            'view article categories',
+            'create article categories',
+            'edit article categories',
+            'delete article categories',
             'view tags',
             'create tags',
             'edit tags',
@@ -134,6 +141,11 @@ class RolePermissionSeeder extends Seeder
             'create lessons',
             'edit lessons',
             'delete lessons',
+            // Course Category Management Only
+            'view course categories',
+            'create course categories',
+            'edit course categories',
+            'delete course categories',
             // Admin Panel Access (for dashboard)
             'access admin panel',
             'view dashboard',
@@ -167,10 +179,16 @@ class RolePermissionSeeder extends Seeder
             'manage enrollments',
             'approve enrollments',
             'reject enrollments',
-            'view categories',
-            'create categories',
-            'edit categories',
-            'delete categories',
+            // Article Category Management
+            'view article categories',
+            'create article categories',
+            'edit article categories',
+            'delete article categories',
+            // Course Category Management
+            'view course categories',
+            'create course categories',
+            'edit course categories',
+            'delete course categories',
             'view tags',
             'create tags',
             'edit tags',
