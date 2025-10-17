@@ -15,7 +15,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles')->latest()->paginate(20);
+        // Exclude Super Admin users from the list
+        $users = User::with('roles')
+            ->whereDoesntHave('roles', function($query) {
+                $query->where('name', 'Super-Admin');
+            })
+            ->latest()
+            ->paginate(20);
         return view('admin.users.index', compact('users'));
     }
 
@@ -69,6 +75,12 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::with('roles')->findOrFail($id);
+        
+        // Prevent editing Super Admin users
+        if ($user->hasRole('Super-Admin')) {
+            return redirect()->route('admin.users.index')->with('error', 'Super Admin users cannot be edited.');
+        }
+        
         $roles = Role::whereIn('name', ['student', 'instructor', 'content-manager', 'admin'])->get();
         return view('admin.users.edit', compact('user', 'roles'));
     }
@@ -79,6 +91,11 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
+
+        // Prevent updating Super Admin users
+        if ($user->hasRole('Super-Admin')) {
+            return redirect()->route('admin.users.index')->with('error', 'Super Admin users cannot be updated.');
+        }
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -113,6 +130,11 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+
+        // Prevent deleting Super Admin users
+        if ($user->hasRole('Super-Admin')) {
+            return redirect()->back()->with('error', 'Super Admin users cannot be deleted.');
+        }
 
         // Prevent deleting the current admin user
         if ($user->id == auth()->id()) {
