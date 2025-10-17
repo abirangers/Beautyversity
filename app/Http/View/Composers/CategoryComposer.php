@@ -15,10 +15,22 @@ class CategoryComposer
      */
     public function compose(View $view)
     {
-        $categories = ArticleCategory::whereHas('articles')
+        // Daftar kategori yang ingin ditampilkan sesuai dengan desain header
+        $desiredCategories = [
+            'MYTHBUSTER', 
+            'SKINCARE',
+            'PERSONALCARE',
+            'HAIRCARE',
+            'DECORATIVE',
+            'MENZONE',
+            'BAHANAKTIF',
+            'BEAUTYLIFE',
+        ];
+
+        $categories = ArticleCategory::whereIn('name', $desiredCategories)
+            ->whereHas('articles')
             ->withCount('articles')
-            ->orderBy('name')
-            ->limit(10)
+            ->orderByRaw("FIELD(name, '" . implode("', '", $desiredCategories) . "')")
             ->get();
 
         $view->with('articleCategories', $categories);
