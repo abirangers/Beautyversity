@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\ArticleCategoryController as AdminArticleCategoryController;
 use App\Http\Controllers\Admin\CourseCategoryController as AdminCourseCategoryController;
 use App\Http\Controllers\Admin\TagController as AdminTagController;
+use App\Http\Controllers\ProfileController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -37,6 +38,13 @@ Route::get('/search', [SearchController::class, 'index'])->name('search');
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Profile management routes
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     Route::post('/attachments', function (Request $request) {
         $request->validate([
@@ -55,15 +63,47 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::middleware('admin')->name('admin.')->group(function () {
-        Route::resource('courses', AdminCourseController::class);
-        Route::resource('course-categories', AdminCourseCategoryController::class)->except(['show']);
-        Route::resource('lessons', AdminLessonController::class);
-        Route::resource('users', AdminUserController::class);
-        Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments.index');
-        Route::post('payments/approve/{id}', [AdminPaymentController::class, 'approve'])->name('payments.approve');
-        Route::resource('articles', AdminArticleController::class);
-        Route::resource('article-categories', AdminArticleCategoryController::class)->except(['show']);
-        Route::resource('tags', AdminTagController::class)->except(['show']);
+    // Routes that require admin panel access
+    Route::middleware('can:access admin panel')->name('admin.')->group(function () {
+        // Course management routes
+        Route::middleware('can:view courses')->group(function () {
+            Route::resource('courses', AdminCourseController::class);
+        });
+        
+        // Course category management
+        Route::middleware('can:view categories')->group(function () {
+            Route::resource('course-categories', AdminCourseCategoryController::class)->except(['show']);
+        });
+        
+        // Lesson management
+        Route::middleware('can:view lessons')->group(function () {
+            Route::resource('lessons', AdminLessonController::class);
+        });
+        
+        // User management - only for admins
+        Route::middleware('can:view users')->group(function () {
+            Route::resource('users', AdminUserController::class);
+        });
+        
+        // Payment management
+        Route::middleware('can:manage enrollments')->group(function () {
+            Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+            Route::post('payments/approve/{id}', [AdminPaymentController::class, 'approve'])->name('payments.approve');
+        });
+        
+        // Article management
+        Route::middleware('can:view articles')->group(function () {
+            Route::resource('articles', AdminArticleController::class);
+        });
+        
+        // Article category management
+        Route::middleware('can:view categories')->group(function () {
+            Route::resource('article-categories', AdminArticleCategoryController::class)->except(['show']);
+        });
+        
+        // Tag management
+        Route::middleware('can:view tags')->group(function () {
+            Route::resource('tags', AdminTagController::class)->except(['show']);
+        });
     });
 });

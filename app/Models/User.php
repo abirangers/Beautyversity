@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -19,9 +20,9 @@ class User extends Authenticatable
      */
     protected $fillable = [ 
         'name',
+        'username',
         'email',
         'password',
-        'role',
         'last_login',
     ];
 
@@ -49,13 +50,6 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Check if user is admin
-     */
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
 
     /**
      * Get user's enrolled courses
@@ -72,5 +66,73 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(\App\Models\Course::class, 'enrollments')
                     ->wherePivot('payment_status', 'completed');
+    }
+
+    /**
+     * Check if user is an admin (has admin or Super-Admin role)
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(['admin', 'Super-Admin']);
+    }
+
+    /**
+     * Check if user is an instructor
+     */
+    public function isInstructor(): bool
+    {
+        return $this->hasRole('instructor');
+    }
+
+    /**
+     * Check if user is a content manager
+     */
+    public function isContentManager(): bool
+    {
+        return $this->hasRole('content-manager');
+    }
+
+    /**
+     * Check if user is a student
+     */
+    public function isStudent(): bool
+    {
+        return $this->hasRole('student');
+    }
+
+    /**
+     * Check if user can manage courses
+     */
+    public function canManageCourses(): bool
+    {
+        return $this->can(['create courses', 'edit courses', 'delete courses']);
+    }
+
+    /**
+     * Check if user can manage articles
+     */
+    public function canManageArticles(): bool
+    {
+        return $this->can(['create articles', 'edit articles', 'delete articles']);
+    }
+
+    /**
+     * Find user by username or email
+     */
+    public static function findByUsernameOrEmail($login)
+    {
+        return static::where('username', $login)
+                    ->orWhere('email', $login)
+                    ->first();
+    }
+
+    /**
+     * Get validation rules for username
+     */
+    public static function getUsernameRules()
+    {
+        return [
+            'username' => ['required', 'string', 'min:3', 'max:20', 'unique:users', 'regex:/^[a-zA-Z0-9_-]+$/']
+        ];
     }
 }

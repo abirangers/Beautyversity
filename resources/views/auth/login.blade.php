@@ -57,9 +57,10 @@
                 <form class="mt-8 space-y-6" method="POST" action="{{ route('login') }}">
                     @csrf
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Alamat Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                            autocomplete="email"
+                        <label for="login" class="block text-sm font-medium text-gray-700 mb-2">Username atau Email</label>
+                        <input type="text" id="login" name="login" value="{{ old('login') }}" required
+                            autocomplete="username"
+                            placeholder="Masukkan username atau email Anda"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     </div>
 

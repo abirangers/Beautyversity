@@ -1,6 +1,19 @@
 import "./libs/trix";
 import './bootstrap';
 
+// Alpine.js setup
+import Alpine from 'alpinejs'
+import collapse from '@alpinejs/collapse'
+
+// Make Alpine available globally
+window.Alpine = Alpine
+
+// Register plugins
+Alpine.plugin(collapse)
+
+// Start Alpine
+Alpine.start()
+
 function uploadTrixAttachment(editor, attachment) {
     if (!attachment.file) {
         return;
@@ -39,25 +52,3 @@ document.addEventListener('trix-attachment-add', (event) => {
     uploadTrixAttachment(event.target, event.attachment);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
-    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-
-    if (mobileMenuButton && mobileMenuCloseButton && mobileMenuOverlay) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenuOverlay.classList.remove('hidden');
-        });
-
-        mobileMenuCloseButton.addEventListener('click', function() {
-            mobileMenuOverlay.classList.add('hidden');
-        });
-
-        // Optional: Close menu when clicking outside the menu content
-        mobileMenuOverlay.addEventListener('click', function(e) {
-            if (e.target === mobileMenuOverlay) {
-                mobileMenuOverlay.classList.add('hidden');
-            }
-        });
-    }
-});

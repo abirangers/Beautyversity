@@ -7,11 +7,13 @@
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
         <div class="flex-1">
         </div>
+        @can('create courses')
         <a href="{{ route('admin.courses.create') }}"
             class="inline-flex items-center justify-center px-5 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors duration-300">
             <i class="fas fa-plus mr-2 -ml-1 text-base"></i>
             Add New Course
         </a>
+        @endcan
     </div>
 
     @if (session('success'))
@@ -65,8 +67,11 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
                                 <a href="{{ route('admin.courses.show', $course->id) }}"
                                     class="text-gray-500 hover:text-gray-800">View</a>
+                                @can('edit courses')
                                 <a href="{{ route('admin.courses.edit', $course->id) }}"
                                     class="text-primary-600 hover:text-primary-800">Edit</a>
+                                @endcan
+                                @can('delete courses')
                                 <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST"
                                     class="inline"
                                     onsubmit="return confirm('Are you sure you want to delete this course and all of its related lessons? This action cannot be undone.');">
@@ -74,6 +79,7 @@
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800">Delete</button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                     @empty

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View; // Tambahkan ini
+use Illuminate\Support\Facades\Gate; // Tambahkan untuk Super-Admin
 use App\Http\View\Composers\CategoryComposer; // Tambahkan ini
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +24,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Daftarkan composer untuk layout app
         View::composer('layouts.app', CategoryComposer::class);
+        
+        // Implicitly grant "Super-Admin" role all permission checks using can()
+        Gate::before(function ($user, $ability) {
+            if ($user && $user->hasRole('Super-Admin')) {
+                return true;
+            }
+        });
     }
 }

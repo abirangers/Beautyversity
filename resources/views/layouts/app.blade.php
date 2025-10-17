@@ -20,7 +20,7 @@
     <x-rich-text::styles theme="richtextlaravel" />
 </head>
 
-<body class="font-sans antialiased bg-gray-50 text-gray-800">
+<body class="font-sans antialiased bg-gray-50 text-gray-800" x-data="{ mobileMenuOpen: false }">
     <div class="min-h-screen flex flex-col">
 
         <header>
@@ -56,7 +56,7 @@
                     <div class="flex items-center justify-between h-16">
                         <!-- Mobile Menu Button -->
                         <div class="md:hidden">
-                            <button id="mobile-menu-button" class="text-gray-600 p-2 rounded-md">
+                            <button @click="mobileMenuOpen = true" class="text-gray-600 p-2 rounded-md">
                                 <i class="fas fa-bars h-6 w-6"></i>
                             </button>
                         </div>
@@ -99,15 +99,49 @@
                                 <i class="fas fa-search h-5 w-5"></i>
                             </a>
                             @auth
-                            <!-- kalo admin ke /admin, kalo user ke /dashboard -->
-                                <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}"
-                                    class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Dashboard</a>
+                            <!-- User Dropdown Menu -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" class="flex items-center space-x-1 text-gray-700 text-sm font-medium hover:text-primary-600 transition">
+                                        <span class="hidden md:inline">{{ Auth::user()->name }}</span>
+                                        <i class="fas fa-user-circle ml-2"></i>
+                                        <i class="fas fa-chevron-down ml-1"></i>
+                                    </button>
+                                    
+                                    <div x-show="open" 
+                                         @click.away="open = false"
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 scale-95"
+                                         x-transition:enter-end="opacity-100 scale-100"
+                                         x-transition:leave="transition ease-in duration-75"
+                                         x-transition:leave-start="opacity-100 scale-100"
+                                         x-transition:leave-end="opacity-0 scale-95"
+                                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                                        <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-user mr-2"></i>My Profile
+                                        </a>
+                                        <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                        </a>
+                                        @if(Auth::user()->isAdmin())
+                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-cog mr-2"></i>Admin Panel
+                                        </a>
+                                        @endif
+                                        <div class="border-t border-gray-100"></div>
+                                        <form method="POST" action="{{ route('logout') }}" class="block">
+                                            @csrf
+                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             @else
-                                {{-- <a href="{{ route('login') }}"
+                                <a href="{{ route('login') }}"
                                     class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Log
                                     in</a>
                                 <a href="{{ route('register') }}" id="register-button"
-                                    class="bg-primary-600 text-white px-4 py-2 text-sm font-medium rounded-md hover:opacity-90 transition-colors duration-300">Register</a> --}}
+                                    class="bg-primary-600 text-white px-4 py-2 text-sm font-medium rounded-md hover:opacity-90 transition-colors duration-300">Register</a>
                             @endauth
                         </div>
                     </div>
@@ -116,12 +150,20 @@
         </header>
 
         <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu-overlay" class="hidden fixed inset-0 bg-white z-50 p-4">
+        <div x-cloak
+             x-show="mobileMenuOpen" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-white z-50 p-4">
             <div class="flex justify-between items-center mb-8">
                 <a href="{{ route('home') }}">
                     <img src="{{ asset('logo.webp') }}" alt="Logo" class="h-10">
                 </a>
-                <button id="mobile-menu-close-button" class="text-gray-800">
+                <button @click="mobileMenuOpen = false" class="text-gray-800">
                     <i class="fas fa-times h-6 w-6"></i>
                 </button>
             </div>

@@ -43,6 +43,11 @@
     html {
         scroll-behavior: smooth;
     }
+    
+    /* Alpine.js x-cloak directive */
+    [x-cloak] { 
+        display: none !important; 
+    }
 }
 
 @layer components {

@@ -9,71 +9,70 @@
     @if($articles->isEmpty())
         <p class="text-gray-600">No articles available at the moment.</p>
     @else
-        <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @include('article.partials.articles', ['articles' => $articles])
-        </div>
-
-        @if($articles->hasMorePages())
-            <div class="mt-8 text-center">
-                <button id="load-more-btn"
-                        class="px-6 py-3 bg-primary-600 text-white font-semibold rounded-md hover:bg-primary-700 transition-colors"
-                        data-page="{{ $articles->currentPage() + 1 }}"
-                        data-url="{{ route('article.load-more') }}">
-                    Load More
-                </button>
-                <div id="loading-spinner" class="hidden mt-4">
-                    <svg class="animate-spin h-8 w-8 text-primary-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </div>
+        <div x-data="articleLoader()" class="space-y-8">
+            <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @include('article.partials.articles', ['articles' => $articles])
             </div>
-        @endif
+
+            @if($articles->hasMorePages())
+                <div class="mt-8 text-center">
+                    <button @click="loadMore()"
+                            :disabled="loading"
+                            class="px-6 py-3 bg-primary-600 text-white font-semibold rounded-md hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-show="!loading">Load More</span>
+                        <span x-show="loading">Loading...</span>
+                    </button>
+                    <div x-show="loading" class="mt-4">
+                        <svg class="animate-spin h-8 w-8 text-primary-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                </div>
+            @endif
+        </div>
     @endif
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadMoreBtn = document.getElementById('load-more-btn');
-            const articlesContainer = document.getElementById('articles-container');
-            const loadingSpinner = document.getElementById('loading-spinner');
-
-            if (loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    const url = this.getAttribute('data-url');
-
-                    // Show loading spinner and disable button
-                    loadingSpinner.classList.remove('hidden');
-                    loadMoreBtn.disabled = true;
-
-                    // Make AJAX request
-                    fetch(`${url}?page=${page}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Append new articles to the container
-                            articlesContainer.insertAdjacentHTML('beforeend', data.articles_html);
-
-                            // Update button page number
-                            if (data.has_more) {
-                                loadMoreBtn.setAttribute('data-page', parseInt(page) + 1);
-                            } else {
-                                // Hide button if no more articles
-                                loadMoreBtn.style.display = 'none';
-                            }
-
-                            // Hide loading spinner and enable button
-                            loadingSpinner.classList.add('hidden');
-                            loadMoreBtn.disabled = false;
-                        })
-                        .catch(error => {
-                            console.error('Error loading more articles:', error);
-                            // Hide loading spinner and enable button
-                            loadingSpinner.classList.add('hidden');
-                            loadMoreBtn.disabled = false;
-                        });
-                });
+        function articleLoader(categorySlug = null) {
+            return {
+                loading: false,
+                page: {{ $articles->currentPage() + 1 }},
+                hasMore: {{ $articles->hasMorePages() ? 'true' : 'false' }},
+                categorySlug: categorySlug,
+                
+                async loadMore() {
+                    if (this.loading || !this.hasMore) return;
+                    
+                    this.loading = true;
+                    
+                    try {
+                        const params = { page: this.page };
+                        if (this.categorySlug) {
+                            params.category_slug = this.categorySlug;
+                        }
+                        
+                        const response = await axios.get('{{ route("article.load-more") }}', { params });
+                        const data = response.data;
+                        
+                        // Append new articles to the container
+                        document.getElementById('articles-container').insertAdjacentHTML('beforeend', data.articles_html);
+                        
+                        // Update state
+                        if (data.has_more) {
+                            this.page++;
+                        } else {
+                            this.hasMore = false;
+                        }
+                        
+                    } catch (error) {
+                        console.error('Error loading more articles:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                }
             }
-        });
+        }
     </script>
 </div>
 @endsection
