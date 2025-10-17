@@ -59,14 +59,14 @@
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex items-center justify-between h-16">
                         <!-- Mobile Menu Button -->
-                        <div class="md:hidden">
+                        <div class="lg:hidden">
                             <button @click="mobileMenuOpen = true" class="text-gray-600 p-2 rounded-md">
                                 <i class="fas fa-bars h-6 w-6"></i>
                             </button>
                         </div>
 
                         <!-- Desktop Navigation Links -->
-                        <div class="hidden md:flex md:flex-col md:items-center md:space-y-2">
+                        <div class="hidden lg:flex lg:flex-col lg:items-center lg:space-y-2">
 
                             <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-1">
                                 <a href="{{ route('home') }}"
@@ -86,7 +86,7 @@
 
                         <!-- Search and Auth Links -->
                         <div class="flex items-center space-x-4">
-                            <form action="{{ route('search') }}" method="GET" class="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-primary-500">
+                            <form action="{{ route('search') }}" method="GET" class="hidden lg:flex items-center bg-gray-100 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-primary-500">
                                 <label for="header-search" class="sr-only">Cari</label>
                                 <input
                                     type="search"
@@ -99,14 +99,14 @@
                                     <i class="fas fa-search h-4 w-4"></i>
                                 </button>
                             </form>
-                            <a href="{{ route('search') }}" class="md:hidden text-gray-600 hover:text-primary-600">
+                            <a href="{{ route('search') }}" class="lg:hidden text-gray-600 hover:text-primary-600">
                                 <i class="fas fa-search h-5 w-5"></i>
                             </a>
                             @auth
-                            <!-- User Dropdown Menu -->
-                                <div class="relative" x-data="{ open: false }">
+                            <!-- User Dropdown Menu - Desktop (lg and up) -->
+                                <div class="relative hidden lg:block" x-data="{ open: false }">
                                     <button @click="open = !open" class="flex items-center space-x-1 text-gray-700 text-sm font-medium hover:text-primary-600 transition">
-                                        <span class="hidden md:inline">{{ Auth::user()->name }}</span>
+                                        <span class="hidden lg:inline">{{ Auth::user()->name }}</span>
                                         <i class="fas fa-user-circle ml-2"></i>
                                         <i class="fas fa-chevron-down ml-1"></i>
                                     </button>
@@ -125,7 +125,7 @@
                                         </a>
                                         
                                         <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                            <i class="fas fa-th-large mr-2"></i>Dashboard
                                         </a>
                                         @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
                                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -140,6 +140,20 @@
                                             </button>
                                         </form>
                                     </div>
+                                </div>
+
+                                <!-- Mobile User Menu (hidden on lg screens and above - 1024px+) -->
+                                <div class="lg:hidden flex items-center space-x-2">
+                                    <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" 
+                                       class="text-gray-700 hover:text-primary-600 transition">
+                                        <i class="fas fa-th-large h-5 w-5"></i>
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-gray-700 hover:text-primary-600 transition">
+                                            <i class="fas fa-sign-out-alt h-5 w-5"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             @else
                                 <a href="{{ route('login') }}"
@@ -186,6 +200,37 @@
                 </div>
             </form>
             <nav class="flex flex-col space-y-4">
+                @auth
+                    <div class="border-b border-gray-200 pb-4 mb-4">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <i class="fas fa-user-circle text-2xl text-gray-600"></i>
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ Auth::user()->name }}</p>
+                                <p class="text-sm text-gray-600">{{ Auth::user()->username ?? Auth::user()->email }}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col space-y-2">
+                            <a href="{{ route('profile.index') }}" class="text-gray-700 hover:text-primary-600 transition flex items-center">
+                                <i class="fas fa-user mr-2"></i>My Profile
+                            </a>
+                            <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="text-gray-700 hover:text-primary-600 transition flex items-center">
+                                <i class="fas fa-th-large mr-2"></i>Dashboard
+                            </a>
+                            @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-primary-600 transition flex items-center">
+                                <i class="fas fa-cog mr-2"></i>Admin Panel
+                            </a>
+                            @endif
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="text-gray-700 hover:text-primary-600 transition flex items-center w-full text-left">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endauth
+                
                 @if (isset($articleCategories))
                     @foreach ($articleCategories as $category)
                         <a href="{{ route('article.category', $category->slug) }}"
