@@ -38,25 +38,45 @@
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}" required
+                            placeholder="e.g., John Doe, Dr. Amanda Larasati"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                    </div>
+
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" name="username" id="username" value="{{ old('username') }}" required
+                            placeholder="e.g., johndoe, amanda_larasati"
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        <p class="mt-1 text-xs text-gray-500">Username for login. Only letters, numbers, underscores, and dashes are allowed.</p>
+                        @error('username')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                         <input type="email" name="email" id="email" value="{{ old('email') }}" required
+                            placeholder="e.g., john@example.com"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                         <input type="password" name="password" id="password" required
+                            placeholder="Minimum 8 characters"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm
-                            Password</label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" required
+                            placeholder="Repeat the same password"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     </div>
 
@@ -64,9 +84,16 @@
                         <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
                         <select name="role" id="role" required
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
-                            <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Student</option>
-                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="" disabled {{ old('role') ? '' : 'selected' }}>-- Select Role --</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                    {{ ucfirst(str_replace('-', ' ', $role->name)) }}
+                                </option>
+                            @endforeach
                         </select>
+                        @error('role')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>

@@ -25,11 +25,8 @@ class ArticleCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:article_categories,name',
-            'slug' => 'nullable|string|max:255|unique:article_categories,slug',
             'description' => 'nullable|string',
         ]);
-
-        $data['slug'] = Str::slug($data['slug'] ?? $data['name']);
 
         ArticleCategory::create($data);
 
@@ -47,11 +44,8 @@ class ArticleCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:article_categories,name,' . $articleCategory->id,
-            'slug' => 'nullable|string|max:255|unique:article_categories,slug,' . $articleCategory->id,
             'description' => 'nullable|string',
         ]);
-
-        $data['slug'] = Str::slug($data['slug'] ?? $data['name']);
 
         $articleCategory->update($data);
 

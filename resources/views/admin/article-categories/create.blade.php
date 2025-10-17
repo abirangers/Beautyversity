@@ -28,25 +28,18 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
                     <input type="text" name="name" id="name" value="{{ old('name') }}" required
+                        placeholder="e.g., BahanAktif, BeautyLife, MythBuster"
                         class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-                    <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
-                        class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                        placeholder="auto-generated if empty">
-                    @error('slug')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
 
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                     <textarea name="description" id="description" rows="3"
+                        placeholder="Describe what this category covers and who it's for..."
                         class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">{{ old('description') }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

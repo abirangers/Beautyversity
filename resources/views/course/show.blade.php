@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $course->title . ' - Kelas Digital')
+@section('seo')
+    {!! seo($course) !!}
+@endsection
 
 @section('content')
 

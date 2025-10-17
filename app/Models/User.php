@@ -69,11 +69,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is an admin (has admin or Super-Admin role)
+     * Check if user is an admin (has admin role)
      */
     public function isAdmin(): bool
     {
-        return $this->hasRole(['admin', 'Super-Admin']);
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * Check if user is a super admin (has Super-Admin role)
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('Super-Admin');
     }
 
     /**

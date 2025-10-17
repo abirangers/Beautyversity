@@ -37,7 +37,7 @@
                         <div>
                             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
                             <input type="text" name="title" id="title" value="{{ old('title', $article->title) }}"
-                                required
+                                required placeholder="e.g., 5 Tips Skincare untuk Kulit Berminyak"
                                 class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                             @error('title')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -47,10 +47,9 @@
                         <div>
                             <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
                             <input type="text" name="slug" id="slug" value="{{ old('slug', $article->slug) }}"
-                                required
-                                class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                                placeholder="contoh: tips-belajar-laravel">
-                            <p class="mt-1 text-xs text-gray-500">Slug menentukan URL publik. Gunakan huruf kecil dan tanda hubung untuk pemisah kata.</p>
+                                placeholder="e.g., tips-skincare-kulit-berminyak (leave blank to auto-generate from title)"
+                                class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            <p class="mt-1 text-xs text-gray-500">Slug menentukan URL publik. Kosongkan untuk auto-generate dari title, atau gunakan huruf kecil dan tanda hubung untuk manual override.</p>
                             @error('slug')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -61,7 +60,7 @@
                     <div>
                         <label for="author" class="block text-sm font-medium text-gray-700 mb-2">Author</label>
                         <input type="text" name="author" id="author" value="{{ old('author', $article->author) }}"
-                            required
+                            required placeholder="e.g., Dr. Amanda Larasati, Beauty Expert"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('author')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -117,6 +116,7 @@
                     <div>
                         <label for="post_type" class="block text-sm font-medium text-gray-700 mb-2">Post Type</label>
                         <input type="text" name="post_type" id="post_type" value="{{ old('post_type', $article->post_type ?? 'post') }}"
+                            placeholder="e.g., post, page, tutorial"
                             class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         @error('post_type')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -144,6 +144,7 @@
                     <div class="md:col-span-2">
                         <label for="excerpt" class="block text-sm font-medium text-gray-700 mb-2">Ringkasan Artikel</label>
                         <textarea name="excerpt" id="excerpt" rows="3"
+                            placeholder="Ringkasan singkat artikel yang akan ditampilkan di halaman utama..."
                             class="w-full block px-4 py-2.5 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">{{ old('excerpt', $article->excerpt) }}</textarea>
                         <p class="mt-1 text-xs text-gray-500">Opsional: Ringkasan singkat dari artikel (akan ditampilkan sebelum isi lengkap artikel)</p>
                         @error('excerpt')

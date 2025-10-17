@@ -37,15 +37,9 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->filled('slug')) {
-            $request->merge([
-                'slug' => Str::slug($request->input('slug')),
-            ]);
-        }
-
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/|unique:articles,slug',
+            'slug' => 'nullable|string|max:255|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
             'content_format' => 'required|string|in:wordpress,rich_text',
             'content' => 'nullable|required_if:content_format,wordpress',
             'body' => 'nullable|required_if:content_format,rich_text',

@@ -45,15 +45,30 @@
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                                    <div class="text-sm text-gray-500">{{ $user->username ?? $user->email }}</div>
+                                    @if($user->username)
+                                        <div class="text-xs text-gray-400">{{ $user->email }}</div>
+                                    @endif
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
-                                {{ ucfirst($user->role) }}
-                            </span>
+                            @if($user->roles->count() > 0)
+                                @foreach($user->roles as $role)
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {{ $role->name === 'Super-Admin' ? 'bg-red-100 text-red-800' : 
+                                           ($role->name === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                           ($role->name === 'instructor' ? 'bg-blue-100 text-blue-800' : 
+                                           ($role->name === 'content-manager' ? 'bg-yellow-100 text-yellow-800' : 
+                                           'bg-green-100 text-green-800'))) }}">
+                                        {{ ucfirst(str_replace('-', ' ', $role->name)) }}
+                                    </span>
+                                @endforeach
+                            @else
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    No Role
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-700">{{ $user->created_at->format('d M Y') }}</div>

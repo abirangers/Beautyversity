@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $article->title)
+@section('seo')
+    {!! seo($article) !!}
+@endsection
 
 @section('content')
 

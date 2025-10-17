@@ -25,11 +25,8 @@ class CourseCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:course_categories,name',
-            'slug' => 'nullable|string|max:255|unique:course_categories,slug',
             'description' => 'nullable|string',
         ]);
-
-        $data['slug'] = Str::slug($data['slug'] ?? $data['name']);
 
         CourseCategory::create($data);
 
@@ -47,11 +44,8 @@ class CourseCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:course_categories,name,' . $courseCategory->id,
-            'slug' => 'nullable|string|max:255|unique:course_categories,slug,' . $courseCategory->id,
             'description' => 'nullable|string',
         ]);
-
-        $data['slug'] = Str::slug($data['slug'] ?? $data['name']);
 
         $courseCategory->update($data);
 
