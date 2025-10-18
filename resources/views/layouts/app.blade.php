@@ -74,7 +74,7 @@
                             
                             @if (isset($articleCategories))
                             <!-- Article Categories Dropdown -->
-                            <div class="relative ml-4" x-data="{ open: false }">
+                            <div class="relative" x-data="{ open: false }">
                                 <button @mouseenter="open = true" 
                                         @mouseleave="open = false"
                                         class="flex items-center space-x-1 text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
