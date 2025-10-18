@@ -9,9 +9,44 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
+    /**
+     * Handle tag creation and return array of tag IDs
+     */
+    private function handleTags($tags)
+    {
+        if (empty($tags)) {
+            return [];
+        }
+
+        $tagIds = [];
+        
+        foreach ($tags as $tag) {
+            $tagName = trim($tag);
+            if (empty($tagName)) {
+                continue;
+            }
+            
+            // Check if tag exists by name first
+            $existingTag = Tag::where('name', $tagName)->first();
+            if ($existingTag) {
+                $tagIds[] = $existingTag->id;
+            } else {
+                // Create new tag
+                $newTag = Tag::create([
+                    'name' => $tagName,
+                    'slug' => Str::slug($tagName)
+                ]);
+                $tagIds[] = $newTag->id;
+            }
+        }
+        
+        return $tagIds;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -50,7 +85,7 @@ class ArticleController extends Controller
             'categories' => 'required|array|min:1',
             'categories.*' => 'exists:article_categories,id',
             'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
+            'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
         ]);
 
         $thumbnail = 'default-article.jpg';
@@ -71,7 +106,10 @@ class ArticleController extends Controller
         ]);
 
         $article->categories()->sync($data['categories']);
-        $article->tags()->sync($data['tags'] ?? []);
+        
+        // Handle tags (both existing and new ones)
+        $tagIds = $this->handleTags($data['tags'] ?? []);
+        $article->tags()->sync($tagIds);
 
         return redirect()->route('admin.articles.index')->with('success', 'Article created successfully.');
     }
@@ -131,7 +169,7 @@ class ArticleController extends Controller
             'categories' => 'required|array|min:1',
             'categories.*' => 'exists:article_categories,id',
             'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
+            'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
         ]);
 
         $article = Article::findOrFail($id);
@@ -153,7 +191,10 @@ class ArticleController extends Controller
 
         $article->update($payload);
         $article->categories()->sync($data['categories']);
-        $article->tags()->sync($data['tags'] ?? []);
+        
+        // Handle tags (both existing and new ones)
+        $tagIds = $this->handleTags($data['tags'] ?? []);
+        $article->tags()->sync($tagIds);
 
         return redirect()->route('admin.articles.index')->with('success', 'Article updated successfully.');
     }

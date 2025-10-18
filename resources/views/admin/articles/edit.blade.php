@@ -78,7 +78,7 @@
                     <div>
                         <label for="categories" class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
                         <select name="categories[]" id="categories" multiple required
-                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            class="select2-categories w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" {{ in_array($category->id, $selectedCategories) ? 'selected' : '' }}>
                                     {{ $category->name }}
@@ -97,7 +97,7 @@
                     <div>
                         <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
                         <select name="tags[]" id="tags" multiple
-                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            class="select2-tags w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->id }}" {{ in_array($tag->id, $selectedTags) ? 'selected' : '' }}>
                                     {{ $tag->name }}
