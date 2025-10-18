@@ -66,22 +66,41 @@
                         </div>
 
                         <!-- Desktop Navigation Links -->
-                        <div class="hidden lg:flex lg:flex-col lg:items-center lg:space-y-2">
-
-                            <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-1">
-                                <a href="{{ route('home') }}"
-                                    class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
-                                    Home
-                                </a>
-                                @if (isset($articleCategories))
+                        <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                            <a href="{{ route('home') }}"
+                                class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
+                                Home
+                            </a>
+                            
+                            @if (isset($articleCategories))
+                            <!-- Article Categories Dropdown -->
+                            <div class="relative ml-4" x-data="{ open: false }">
+                                <button @mouseenter="open = true" 
+                                        @mouseleave="open = false"
+                                        class="flex items-center space-x-1 text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
+                                    <span>Artikel</span>
+                                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                                </button>
+                                
+                                <div x-show="open" 
+                                     @mouseenter="open = true"
+                                     @mouseleave="open = false"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                                     @foreach ($articleCategories as $category)
                                         <a href="{{ route('article.category', $category->slug) }}"
-                                            class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition whitespace-nowrap">
+                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
                                             {{ $category->name }}
                                         </a>
                                     @endforeach
-                                @endif
+                                </div>
                             </div>
+                            @endif
                         </div>
 
                         <!-- Search and Auth Links -->
@@ -159,8 +178,6 @@
                                 <a href="{{ route('login') }}"
                                     class="auth-link text-gray-700 text-sm font-medium hover:text-primary-600 transition">Log
                                     in</a>
-                                <a href="{{ route('register') }}" id="register-button"
-                                    class="bg-primary-600 text-white px-4 py-2 text-sm font-medium rounded-md hover:opacity-90 transition-colors duration-300">Register</a>
                             @endauth
                         </div>
                     </div>
@@ -232,10 +249,15 @@
                 @endauth
                 
                 @if (isset($articleCategories))
-                    @foreach ($articleCategories as $category)
-                        <a href="{{ route('article.category', $category->slug) }}"
-                            class="text-gray-800 font-semibold uppercase tracking-wider hover:text-primary-60 transition">{{ $category->name }}</a>
-                    @endforeach
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-gray-600 text-sm font-semibold uppercase tracking-wider mb-3">Artikel</h3>
+                        <div class="space-y-2">
+                            @foreach ($articleCategories as $category)
+                                <a href="{{ route('article.category', $category->slug) }}"
+                                    class="block text-gray-700 hover:text-primary-600 transition pl-4">{{ $category->name }}</a>
+                            @endforeach
+                        </div>
+                    </div>
                 @endif
             </nav>
         </div>
@@ -245,12 +267,143 @@
         </main>
 
         <footer style="background-color: #E6B4B8;" class="text-white">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <!-- Footer content can be added here -->
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <!-- Main Footer Content -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                    
+                    <!-- Brand & About Section -->
+                    <div class="lg:col-span-1">
+                        <div class="mb-6">
+                            <a href="{{ route('home') }}" class="flex items-center mb-4">
+                                <img src="{{ asset('logo.webp') }}" alt="Kelas Digital" class="h-10 w-auto">
+                            </a>
+                            <h3 class="text-xl font-bold mb-3">Kelas Digital</h3>
+                            <p class="text-sm opacity-90 leading-relaxed">
+                                Platform edukasi kecantikan terpercaya di Indonesia. Belajar dari para ahli dan tingkatkan skill kecantikanmu bersama ribuan siswa lainnya.
+                            </p>
+                        </div>
+                        
+                        <!-- Newsletter Subscription -->
+                        <div class="mt-6">
+                            <h4 class="text-sm font-semibold mb-3 uppercase tracking-wider">Stay Updated</h4>
+                            <form class="space-y-3" action="#" method="POST">
+                                @csrf
+                                <input type="email" 
+                                       placeholder="Masukkan email Anda" 
+                                       class="w-full px-4 py-3 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-70 focus:border-white transition-all duration-200"
+                                       required>
+                                <button type="submit" 
+                                        class="w-full bg-white text-gray-800 px-4 py-3 text-sm font-semibold rounded-lg hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+                                    <i class="fas fa-paper-plane mr-2"></i>Subscribe
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div>
+                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Quick Links</h4>
+                        <ul class="space-y-3">
+                            <li><a href="{{ route('home') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Home</a></li>
+                            <li><a href="{{ route('search') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Search</a></li>
+                            <li><a href="{{ route('dashboard') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Dashboard</a></li>
+                            @auth
+                                <li><a href="{{ route('profile.index') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">My Profile</a></li>
+                            @else
+                                <li><a href="{{ route('login') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Login</a></li>
+                                <li><a href="{{ route('register') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Register</a></li>
+                            @endauth
+                        </ul>
+                    </div>
+
+                    <!-- Article Categories -->
+                    <div>
+                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Artikel Populer</h4>
+                        <ul class="space-y-3">
+                            @if (isset($articleCategories))
+                                @foreach ($articleCategories->take(6) as $category)
+                                    <li>
+                                        <a href="{{ route('article.category', $category->slug) }}" 
+                                           class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">
+                                            {{ $category->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @else
+                                <li><a href="#" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Skincare</a></li>
+                                <li><a href="#" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Haircare</a></li>
+                                <li><a href="#" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Makeup</a></li>
+                                <li><a href="#" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Personal Care</a></li>
+                            @endif
+                        </ul>
+                    </div>
+
+                    <!-- Contact & Social -->
+                    <div>
+                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Hubungi Kami</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-envelope text-sm mt-1"></i>
+                                <div>
+                                    <p class="text-sm opacity-90">Email</p>
+                                    <p class="text-xs opacity-75">info@kelasdigital.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-phone text-sm mt-1"></i>
+                                <div>
+                                    <p class="text-sm opacity-90">Telepon</p>
+                                    <p class="text-xs opacity-75">+62 123 456 7890</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-map-marker-alt text-sm mt-1"></i>
+                                <div>
+                                    <p class="text-sm opacity-90">Alamat</p>
+                                    <p class="text-xs opacity-75">Bandung, Jawa Barat, Indonesia</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Social Media -->
+                        <div class="mt-6">
+                            <h5 class="text-sm font-semibold mb-3 uppercase tracking-wider">Follow Us</h5>
+                            <div class="flex space-x-4">
+                                <a href="https://www.facebook.com/beautyversitydotid" target="_blank" 
+                                   class="text-white hover:text-gray-200 transition-colors duration-200">
+                                    <i class="fab fa-facebook-f text-lg"></i>
+                                </a>
+                                <a href="https://x.com/beautyversityid" target="_blank" 
+                                   class="text-white hover:text-gray-200 transition-colors duration-200">
+                                    <i class="fab fa-twitter text-lg"></i>
+                                </a>
+                                <a href="https://www.instagram.com/beautyversity_id" target="_blank" 
+                                   class="text-white hover:text-gray-200 transition-colors duration-200">
+                                    <i class="fab fa-instagram text-lg"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@beautyversitydotid" target="_blank" 
+                                   class="text-white hover:text-gray-200 transition-colors duration-200">
+                                    <i class="fab fa-youtube text-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-12 border-t border-white border-opacity-20 pt-8 text-center text-sm">
-                    <p>Copyright © 2024, Kelas Digital. All Rights Reserved.</p>
+
+                <!-- Bottom Footer -->
+                <div class="border-t border-white border-opacity-20 pt-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                        <div class="text-center md:text-left">
+                            <p class="text-sm opacity-90">
+                                Copyright © {{ date('Y') }}, Kelas Digital. All Rights Reserved.
+                            </p>
+                        </div>
+                        <div class="flex space-x-6 text-sm">
+                            <a href="#" class="opacity-90 hover:opacity-100 hover:text-white transition">Privacy Policy</a>
+                            <a href="#" class="opacity-90 hover:opacity-100 hover:text-white transition">Terms of Service</a>
+                            <a href="#" class="opacity-90 hover:opacity-100 hover:text-white transition">Cookie Policy</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -30,9 +30,19 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
+        continue-on-error: true
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
@@ -46,5 +56,16 @@ jobs:
           # Optional: Add claude_args to customize behavior and configuration
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.claude.com/en/docs/claude-code/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr:*)'
+          claude_args: '--allowed-tools "Bash(gh pr:*),Bash(gh issue:*)"'
+
+      - name: Print Claude execution output
+        if: always()
+        run: |
+          echo "Checking for Claude output..."
+          if [ -f /home/runner/work/_temp/claude-execution-output.json ]; then
+            echo "Claude output found:"
+            cat /home/runner/work/_temp/claude-execution-output.json
+          else
+            echo "No Claude output file found"
+          fi
 
