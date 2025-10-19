@@ -91,41 +91,8 @@
         @apply bg-transparent p-0 text-gray-100 font-mono;
     }
 
-    @media (prefers-color-scheme: dark) {
-        .rich-text-content {
-            @apply text-gray-100;
-        }
-
-        .rich-text-content h1,
-        .rich-text-content h2,
-        .rich-text-content h3,
-        .rich-text-content h4,
-        .rich-text-content h5,
-        .rich-text-content h6 {
-            @apply text-gray-100;
-        }
-
-        .rich-text-content p,
-        .rich-text-content li {
-            @apply text-gray-200;
-        }
-
-        .rich-text-content code {
-            @apply bg-gray-800 text-gray-100;
-        }
-
-        .rich-text-content pre {
-            @apply bg-gray-800 text-gray-100 shadow-lg;
-        }
-
-        .rich-text-content blockquote {
-            @apply border-primary-400 bg-gray-900 text-gray-100;
-        }
-
-        .rich-text-content figcaption {
-            @apply text-gray-400;
-        }
-    }
+    /* Dark mode styling removed to prevent text visibility issues */
+    /* The platform uses a consistent light theme across all devices */
 
     .rich-text-content figure[data-trix-attachment],
     .rich-text-content figure[data-gallery],

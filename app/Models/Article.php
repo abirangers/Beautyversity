@@ -92,7 +92,7 @@ class Article extends Model
         }
 
         // Remove WordPress block comments but keep the HTML content inside
-        $content = preg_replace('/<!--\s*wp:paragraph\s*-->\s*/', '<p class="mb-4 text-gray-700 leading-relaxed">', $content);
+        $content = preg_replace('/<!--\s*wp:paragraph\s*-->\s*/', '<p class="mb-4 text-gray-800 leading-relaxed">', $content);
         $content = preg_replace('/<!--\s*\/wp:paragraph\s*-->\s*/', '</p>', $content);
 
         // Handle different heading levels with proper closing tags
@@ -129,7 +129,7 @@ class Article extends Model
         // Handle lists - remove block comments and add Tailwind styling
         $content = preg_replace('/<!--\s*wp:list\s*-->\s*/', '<ul class="list-disc pl-6 mb-4 space-y-2">', $content);
         $content = preg_replace('/<!--\s*\/wp:list\s*-->\s*/', '</ul>', $content);
-        $content = preg_replace('/<!--\s*wp:list-item\s*-->\s*/', '<li class="text-gray-700">', $content);
+        $content = preg_replace('/<!--\s*wp:list-item\s*-->\s*/', '<li class="text-gray-800">', $content);
         $content = preg_replace('/<!--\s*\/wp:list-item\s*-->\s*/', '</li>', $content);
 
         // Handle ordered lists
