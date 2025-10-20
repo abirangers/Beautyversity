@@ -44,16 +44,23 @@
         </div>
     </div>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="lg:grid lg:grid-cols-12 lg:gap-12">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-12" 
+             x-data="{ 
+                 currentVideoId: '{{ $initialVideoId }}',
+                 switchVideo(videoId) {
+                     this.currentVideoId = videoId;
+                 }
+             }">
 
             <div class="lg:col-span-8">
                 <div class="rounded-lg overflow-hidden shadow-lg mb-8">
                     <div class="aspect-w-16 aspect-h-9 h-96">
-                        <iframe width="100%" height="100%"
-                            src="https://www.youtube.com/embed/{{ $userHasAccess && !empty($course->full_video_ids[0]) ? $course->full_video_ids[0] : $course->trailer_video_id }}"
-                            title="Course Video" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen class="w-full h-full"></iframe>
+                        <iframe id="course-video"
+                                :src="`https://www.youtube.com/embed/${currentVideoId}`"
+                                width="100%" height="100%"
+                                title="Course Video" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen class="w-full h-full"></iframe>
                     </div>
                 </div>
 
@@ -73,17 +80,26 @@
                                      x-collapse
                                      class="module-content border-t border-gray-200 p-4 space-y-3">
                                     @foreach ($lessons as $lesson)
-                                        <div class="lesson-item flex items-center">
-                                            <div class="flex-shrink-0 mr-4">
-                                                @if ($userHasAccess || $lesson->is_preview)
-                                                    <i class="fas fa-check-circle text-primary-500 text-xl"></i>
-                                                @else
-                                                    <i class="fas fa-lock text-gray-400 text-xl"></i>
-                                                @endif
+                                        <div class="lesson-card bg-white rounded-lg p-4 flex items-center justify-between border border-gray-200 hover:shadow-md transition-all duration-200
+                                             @if ($userHasAccess || $lesson->is_preview)
+                                                 cursor-pointer hover:bg-blue-50
+                                             @endif"
+                                             @if ($userHasAccess || $lesson->is_preview)
+                                                 @click="switchVideo('{{ $lesson->youtube_video_id }}')"
+                                             @endif>
+                                            <div class="flex-grow">
+                                                <p class="text-primary-600 font-medium text-sm">{{ $lesson->title }}</p>
                                             </div>
-                                            <div class="flex-grow flex justify-between items-center">
-                                                <p class="text-gray-800">{{ $lesson->title }}</p>
-                                                <span class="text-sm text-gray-500">{{ $lesson->duration }}</span>
+                                            <div class="flex-shrink-0 ml-4">
+                                                @if ($userHasAccess || $lesson->is_preview)
+                                                    <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                                                        <i class="fas fa-play text-primary-600 text-sm"></i>
+                                                    </div>
+                                                @else
+                                                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                                        <i class="fas fa-lock text-gray-500 text-sm"></i>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -137,9 +153,9 @@
 
                     <ul class="space-y-3 text-gray-600 text-sm">
                         <li class="flex items-center"><i class="fas fa-check text-primary-500 mr-3 text-base flex-shrink-0"></i>Akses seumur hidup</li>
-                        <li class="flex items-center"><i class="fas fa-check text-primary-500 mr-3 text-base flex-shrink-0"></i>Sertifikat kelulusan</li>
+                        <li class="flex items-center"><i class="fas fa-check text-primary-500 mr-3 text-base flex-shrink-0"></i>Materi pembelajaran lengkap</li>
                         <li class="flex items-center"><i class="fas fa-check text-primary-500 mr-3 text-base flex-shrink-0"></i>Video kelas berkualitas</li>
-                        <li class="flex items-center"><i class="fas fa-check text-primary-500 mr-3 text-base flex-shrink-0"></i>Akses ke komunitas</li>
+                        <li class="flex items-center"><i class="fas fa-check text-primary-500 mr-3 text-base flex-shrink-0"></i>Konsultasi gratis dengan expert</li>
                     </ul>
                 </div>
             </div>

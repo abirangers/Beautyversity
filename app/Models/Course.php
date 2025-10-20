@@ -22,13 +22,12 @@ class Course extends Model
         'price',
         'thumbnail',
         'trailer_video_id',
-        'full_video_ids',
         'course_category_id',
         'level',
     ];
 
     protected $casts = [
-        'full_video_ids' => 'array',
+        // Removed full_video_ids cast as it's no longer needed
     ];
 
     /**

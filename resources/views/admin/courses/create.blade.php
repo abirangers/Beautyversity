@@ -107,19 +107,6 @@
                         @enderror
                     </div>
 
-                    <!-- Full Video IDs -->
-                    <div class="md:col-span-2">
-                        <label for="full_video_ids" class="block text-sm font-medium text-gray-700 mb-2">Full Video
-                            IDs</label>
-                        <input type="text" name="full_video_ids" id="full_video_ids" value="{{ old('full_video_ids') }}"
-                            placeholder="e.g., abcde123, fghij456, klmno789"
-                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
-                        <p class="mt-2 text-xs text-gray-500">Enter YouTube video IDs separated by a comma (e.g., abcde123,
-                            fghij456).</p>
-                        @error('full_video_ids')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     <!-- Thumbnail -->
                     <div class="md:col-span-2">

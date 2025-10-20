@@ -51,7 +51,6 @@ class CourseController extends Controller
             'price' => 'required|integer|min:0',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'trailer_video_id' => 'required|string',
-            'full_video_ids' => 'nullable|string',
             'course_category_id' => 'required|exists:course_categories,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
         ]);
@@ -61,10 +60,6 @@ class CourseController extends Controller
             $thumbnail = $request->file('thumbnail')->store('courses', 'public');
         }
 
-        $fullVideoIds = $data['full_video_ids']
-            ? array_filter(array_map('trim', explode(',', $data['full_video_ids'])))
-            : [];
-
         Course::create([
             'title' => $data['title'],
             'instructor' => $data['instructor'],
@@ -72,7 +67,6 @@ class CourseController extends Controller
             'price' => $data['price'],
             'thumbnail' => $thumbnail,
             'trailer_video_id' => $data['trailer_video_id'],
-            'full_video_ids' => $fullVideoIds,
             'course_category_id' => $data['course_category_id'],
             'level' => $data['level'],
         ]);
@@ -116,7 +110,6 @@ class CourseController extends Controller
             'price' => 'required|integer|min:0',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'trailer_video_id' => 'required|string',
-            'full_video_ids' => 'nullable|string',
             'course_category_id' => 'required|exists:course_categories,id',
             'level' => 'required|in:Beginner,Intermediate,Advanced',
         ]);
@@ -135,11 +128,6 @@ class CourseController extends Controller
         if ($request->hasFile('thumbnail')) {
             $payload['thumbnail'] = $request->file('thumbnail')->store('courses', 'public');
         }
-
-        $fullVideoIds = $data['full_video_ids']
-            ? array_filter(array_map('trim', explode(',', $data['full_video_ids'])))
-            : [];
-        $payload['full_video_ids'] = $fullVideoIds;
 
         $course->update($payload);
 
