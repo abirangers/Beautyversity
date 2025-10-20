@@ -37,11 +37,13 @@ class AuthController extends Controller
                 $user->save();
             }
 
-            if ($user && ($user->isSuperAdmin() || $user->isAdmin())) {
+            // Redirect based on user role
+            if ($user && ($user->isSuperAdmin() || $user->isAdmin() || $user->isInstructor() || $user->isContentManager())) {
                 return redirect()->intended('/admin');
             }
 
-            return redirect()->intended('/');
+            // Student role goes to dashboard
+            return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors([

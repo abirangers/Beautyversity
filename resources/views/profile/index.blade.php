@@ -129,19 +129,11 @@
                             Change Password
                         </a>
                         
-                        <a href="{{ route('dashboard') }}" 
+                        <a href="{{ Auth::user()->hasRole('student') ? route('dashboard') : route('admin.dashboard') }}" 
                            class="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                            <i class="fas fa-tachometer-alt mr-3 text-gray-400"></i>
-                            Dashboard
+                            <i class="{{ Auth::user()->hasRole('student') ? 'fas fa-th-large' : 'fas fa-cog' }} mr-2"></i>
+                            {{ Auth::user()->hasRole('student') ? 'Dashboard' : 'Admin Panel' }}
                         </a>
-
-                        @if($user->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" 
-                           class="flex items-center w-full px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                            <i class="fas fa-cog mr-3"></i>
-                            Admin Panel
-                        </a>
-                        @endif
                     </div>
                 </div>
             </div>

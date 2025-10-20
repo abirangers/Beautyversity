@@ -113,6 +113,15 @@
                     </a>
                 </div>
 
+                <!-- My Profile -->
+                <div>
+                    <a href="{{ route('profile.index') }}"
+                        class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('profile.*') ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100' }}">
+                        <i class="fas fa-user mr-3 text-base"></i>
+                        My Profile
+                    </a>
+                </div>
+
                 <!-- Course Management Group - Hidden for Content Manager -->
                 @unless(auth()->user()->hasRole('content-manager'))
                 <div x-data="{ 

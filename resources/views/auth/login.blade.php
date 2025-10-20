@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Kelas Digital</title>
+    <title>Login - Beautyversity.id</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
                 </a>
                 <h1 class="text-4xl font-bold leading-tight mb-4">Selamat Datang Kembali!</h1>
                 <p class="text-lg opacity-90">
-                    Masuk untuk melanjutkan perjalanan belajarmu dan akses semua kursus terbaik kami.
+                    Masuk untuk melanjutkan perjalanan kecantikan Anda dan akses semua kursus ilmiah terbaik kami.
                 </p>
             </div>
         </div>
