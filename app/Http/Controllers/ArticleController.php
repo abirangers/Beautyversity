@@ -15,8 +15,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('categories', 'tags')
-            ->orderBy('created_at', 'desc')
+        $articles = Article::published()
+            ->with('categories', 'tags')
+            ->orderBy('published_at', 'desc')
             ->paginate(9);
 
         return view('article.index', compact('articles')); // Pass articles to the view
@@ -33,8 +34,9 @@ class ArticleController extends Controller
         $page = $request->input('page', 1);
         $categorySlug = $request->input('category_slug');
 
-        $query = Article::with('categories', 'tags')
-            ->orderBy('created_at', 'desc');
+        $query = Article::published()
+            ->with('categories', 'tags')
+            ->orderBy('published_at', 'desc');
 
         if ($categorySlug) {
             $query->whereHas('categories', function ($builder) use ($categorySlug) {
@@ -63,11 +65,12 @@ class ArticleController extends Controller
     {
         $category = ArticleCategory::where('slug', $slug)->firstOrFail();
 
-        $articles = Article::with('categories', 'tags')
+        $articles = Article::published()
+            ->with('categories', 'tags')
             ->whereHas('categories', function ($builder) use ($category) {
                 $builder->where('article_categories.id', $category->id);
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('published_at', 'desc')
             ->paginate(9);
 
         return view('article.category', compact('articles', 'category'));

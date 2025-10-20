@@ -53,7 +53,11 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('categories', 'tags')->latest()->paginate(10);
+        $articles = Article::with('categories', 'tags')
+            ->orderBy('status', 'asc')
+            ->orderBy('scheduled_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -87,6 +91,8 @@ class ArticleController extends Controller
             'categories.*' => 'exists:article_categories,id',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
+            'status' => 'required|in:draft,published,scheduled',
+            'scheduled_at' => 'nullable|date|after:now|required_if:status,scheduled',
         ]);
 
         // Auto-fill author if empty (backup safety)
@@ -109,6 +115,9 @@ class ArticleController extends Controller
             'author' => $data['author'],
             'excerpt' => $data['excerpt'] ?? null,
             'post_type' => $data['post_type'] ?? 'post',
+            'status' => $data['status'],
+            'scheduled_at' => $data['scheduled_at'] ?? null,
+            'published_at' => $data['status'] === 'published' ? now() : null,
         ]);
 
         $article->categories()->sync($data['categories']);
@@ -176,6 +185,8 @@ class ArticleController extends Controller
             'categories.*' => 'exists:article_categories,id',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
+            'status' => 'required|in:draft,published,scheduled',
+            'scheduled_at' => 'nullable|date|after:now|required_if:status,scheduled',
         ]);
 
         // Auto-fill author if empty (backup safety)
@@ -194,7 +205,16 @@ class ArticleController extends Controller
             'author' => $data['author'],
             'excerpt' => $data['excerpt'] ?? null,
             'post_type' => $data['post_type'] ?? 'post',
+            'status' => $data['status'],
+            'scheduled_at' => $data['scheduled_at'] ?? null,
         ];
+
+        // Handle published_at based on status
+        if ($data['status'] === 'published' && !$article->published_at) {
+            $payload['published_at'] = now();
+        } elseif ($data['status'] !== 'published') {
+            $payload['published_at'] = null;
+        }
 
         if ($request->hasFile('thumbnail')) {
             $payload['thumbnail'] = $request->file('thumbnail')->store('articles', 'public');
@@ -219,5 +239,37 @@ class ArticleController extends Controller
         $article->delete();
 
         return redirect()->route('admin.articles.index')->with('success', 'Article deleted successfully.');
+    }
+
+    /**
+     * Publish a scheduled article immediately
+     */
+    public function publish(string $id)
+    {
+        $article = Article::findOrFail($id);
+        
+        if ($article->status !== 'scheduled') {
+            return redirect()->back()->with('error', 'Only scheduled articles can be published.');
+        }
+
+        $article->publish();
+
+        return redirect()->back()->with('success', 'Article published successfully.');
+    }
+
+    /**
+     * Unschedule a scheduled article (make it draft)
+     */
+    public function unschedule(string $id)
+    {
+        $article = Article::findOrFail($id);
+        
+        if ($article->status !== 'scheduled') {
+            return redirect()->back()->with('error', 'Only scheduled articles can be unscheduled.');
+        }
+
+        $article->unschedule();
+
+        return redirect()->back()->with('success', 'Article unscheduled successfully.');
     }
 }
