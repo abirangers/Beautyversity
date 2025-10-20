@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Cari Kelas & Artikel')
+@section('title', 'Cari Kursus Kecantikan & Artikel Ilmiah - Beautyversity.id')
 
 @section('content')
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl mx-auto text-center mb-12">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Temukan Materi yang Kamu Butuhkan</h1>
-                <p class="text-gray-600">Cari kelas atau artikel berdasarkan kata kunci untuk mempercepat proses belajar kamu.</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Temukan Ilmu Kecantikan yang Anda Butuhkan</h1>
+                <p class="text-gray-600">Cari kursus kecantikan atau artikel ilmiah berdasarkan kata kunci untuk mempercepat perjalanan kecantikan Anda.</p>
             </div>
 
             <form action="{{ route('search') }}" method="GET" class="max-w-3xl mx-auto mb-16">
@@ -18,7 +18,7 @@
                         id="search"
                         name="q"
                         value="{{ old('q', $keyword) }}"
-                        placeholder="Cari kelas atau artikel..."
+                        placeholder="Cari kursus kecantikan atau artikel ilmiah..."
                         class="flex-1 border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-700"
                         autocomplete="off"
                     >
@@ -30,18 +30,18 @@
 
             @if ($keyword === '')
                 <div class="max-w-2xl mx-auto text-center text-gray-500">
-                    Masukkan kata kunci untuk mulai menelusuri kelas dan artikel.
+                    Masukkan kata kunci untuk mulai menelusuri kursus kecantikan dan artikel ilmiah.
                 </div>
             @else
                 <div class="space-y-16">
                     <div>
                         <div class="flex items-center justify-between mb-6">
-                            <h2 class="text-2xl font-semibold text-gray-900">Kelas</h2>
+                            <h2 class="text-2xl font-semibold text-gray-900">Kursus Kecantikan</h2>
                             <span class="text-sm text-gray-500">{{ $courses->count() }} hasil</span>
                         </div>
 
                         @if ($courses->isEmpty())
-                            <p class="text-gray-500">Tidak ada kelas yang cocok dengan pencarian "<strong>{{ $keyword }}</strong>".</p>
+                            <p class="text-gray-500">Tidak ada kursus kecantikan yang cocok dengan pencarian "<strong>{{ $keyword }}</strong>".</p>
                         @else
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                 @foreach ($courses as $course)
@@ -77,12 +77,12 @@
 
                     <div>
                         <div class="flex items-center justify-between mb-6">
-                            <h2 class="text-2xl font-semibold text-gray-900">Artikel</h2>
+                            <h2 class="text-2xl font-semibold text-gray-900">Artikel Ilmiah</h2>
                             <span class="text-sm text-gray-500">{{ $articles->count() }} hasil</span>
                         </div>
 
                         @if ($articles->isEmpty())
-                            <p class="text-gray-500">Tidak ada artikel yang cocok dengan pencarian "<strong>{{ $keyword }}</strong>".</p>
+                            <p class="text-gray-500">Tidak ada artikel ilmiah yang cocok dengan pencarian "<strong>{{ $keyword }}</strong>".</p>
                         @else
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 @include('article.partials.articles', ['articles' => $articles])

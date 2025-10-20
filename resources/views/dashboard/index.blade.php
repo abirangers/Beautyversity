@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Kelas Digital')
+@section('title', 'Dashboard - Beautyversity.id')
 
 @section('content')
 
@@ -21,13 +21,13 @@
             </div>
             <p class="mt-2 text-lg text-gray-600">
                 @if(auth()->user()->isAdmin())
-                    Anda masuk sebagai Administrator. Kelola platform Kelas Digital dari dashboard admin.
+                    Anda masuk sebagai Administrator. Kelola platform Beautyversity.id dari dashboard admin.
                 @elseif(auth()->user()->isInstructor())
-                    Anda masuk sebagai Instruktur. Kelola kursus dan materi pembelajaran Anda.
+                    Anda masuk sebagai Instruktur. Kelola kursus kecantikan dan materi pembelajaran Anda.
                 @elseif(auth()->user()->isContentManager())
-                    Anda masuk sebagai Content Manager. Kelola artikel dan konten platform Kelas Digital.
+                    Anda masuk sebagai Content Manager. Kelola artikel ilmiah dan konten platform Beautyversity.id.
                 @else
-                    Lanjutkan perjalanan belajarmu. Pilih kelas di bawah ini untuk memulai.
+                    Lanjutkan perjalanan kecantikan Anda. Pilih kursus di bawah ini untuk memulai.
                 @endif
             </p>
             
@@ -64,7 +64,7 @@
 
     <div class="py-16 md:py-20">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Kelas Saya</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Kursus Kecantikan Saya</h2>
 
             @if ($courses->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -98,13 +98,13 @@
                             stroke-width="2"
                             d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     </svg>
-                    <h3 class="mt-2 text-lg font-medium text-gray-900">Anda belum memiliki kelas</h3>
-                    <p class="mt-1 text-sm text-gray-500">Jelajahi katalog kami dan mulailah perjalanan belajarmu hari ini.
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">Anda belum memiliki kursus kecantikan</h3>
+                    <p class="mt-1 text-sm text-gray-500">Jelajahi katalog kami dan mulailah perjalanan kecantikan Anda hari ini.
                     </p>
                     <div class="mt-6">
                         <a href="{{ route('home') }}"
                             class="inline-flex items-center px-5 py-2.5 bg-primary-600 text-white font-semibold text-sm rounded-lg shadow-sm hover:bg-primary-700 transition-colors">
-                            Jelajahi Kelas
+                            Jelajahi Kursus Kecantikan
                         </a>
                     </div>
                 </div>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -87,6 +88,11 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
         ]);
+
+        // Auto-fill author if empty (backup safety)
+        if (empty($data['author'])) {
+            $data['author'] = Auth::user()->name;
+        }
 
         $thumbnail = 'default-article.jpg';
         if ($request->hasFile('thumbnail')) {
@@ -171,6 +177,11 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
         ]);
+
+        // Auto-fill author if empty (backup safety)
+        if (empty($data['author'])) {
+            $data['author'] = Auth::user()->name;
+        }
 
         $article = Article::findOrFail($id);
 

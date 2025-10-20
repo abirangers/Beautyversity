@@ -69,7 +69,7 @@
                         <div class="hidden lg:flex lg:items-center lg:space-x-8">
                             <a href="{{ route('home') }}"
                                 class="nav-link text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
-                                Home
+                                Beranda
                             </a>
                             
                             @if (isset($articleCategories))
@@ -78,7 +78,7 @@
                                 <button @mouseenter="open = true" 
                                         @mouseleave="open = false"
                                         class="flex items-center space-x-1 text-gray-700 text-sm font-semibold uppercase tracking-wider hover:text-primary-600 transition">
-                                    <span>Artikel</span>
+                                    <span>Artikel Ilmiah</span>
                                     <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
                                 </button>
                                 
@@ -112,7 +112,7 @@
                                     id="header-search"
                                     name="q"
                                     class="bg-transparent focus:outline-none text-sm text-gray-600 placeholder-gray-400 w-40"
-                                    placeholder="Cari kelas atau artikel..."
+                                    placeholder="Cari kursus kecantikan atau artikel ilmiah..."
                                 >
                                 <button type="submit" class="text-gray-500 hover:text-primary-600 transition">
                                     <i class="fas fa-search h-4 w-4"></i>
@@ -143,14 +143,12 @@
                                             <i class="fas fa-user mr-2"></i>My Profile
                                         </a>
                                         
-                                        <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <i class="fas fa-th-large mr-2"></i>Dashboard
+                                        <a href="{{ Auth::user()->hasRole('student') ? route('dashboard') : route('admin.dashboard') }}" 
+                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                           title="{{ Auth::user()->hasRole('student') ? 'Student Dashboard' : 'Admin Panel' }}">
+                                            <i class="{{ Auth::user()->hasRole('student') ? 'fas fa-th-large' : 'fas fa-cog' }} mr-2"></i>
+                                            {{ Auth::user()->hasRole('student') ? 'Dashboard' : 'Admin Panel' }}
                                         </a>
-                                        @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
-                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <i class="fas fa-cog mr-2"></i>Admin Panel
-                                        </a>
-                                        @endif
                                         <div class="border-t border-gray-100"></div>
                                         <form method="POST" action="{{ route('logout') }}" class="block">
                                             @csrf
@@ -163,9 +161,10 @@
 
                                 <!-- Mobile User Menu (hidden on lg screens and above - 1024px+) -->
                                 <div class="lg:hidden flex items-center space-x-2">
-                                    <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" 
-                                       class="text-gray-700 hover:text-primary-600 transition">
-                                        <i class="fas fa-th-large h-5 w-5"></i>
+                                    <a href="{{ Auth::user()->hasRole('student') ? route('dashboard') : route('admin.dashboard') }}" 
+                                       class="text-gray-700 hover:text-primary-600 transition"
+                                       title="{{ Auth::user()->hasRole('student') ? 'Student Dashboard' : 'Admin Panel' }}">
+                                        <i class="{{ Auth::user()->hasRole('student') ? 'fas fa-th-large' : 'fas fa-cog' }} h-5 w-5"></i>
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}" class="inline">
                                         @csrf
@@ -230,14 +229,12 @@
                             <a href="{{ route('profile.index') }}" class="text-gray-700 hover:text-primary-600 transition flex items-center">
                                 <i class="fas fa-user mr-2"></i>My Profile
                             </a>
-                            <a href="{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="text-gray-700 hover:text-primary-600 transition flex items-center">
-                                <i class="fas fa-th-large mr-2"></i>Dashboard
+                            <a href="{{ Auth::user()->hasRole('student') ? route('dashboard') : route('admin.dashboard') }}" 
+                               class="text-gray-700 hover:text-primary-600 transition flex items-center"
+                               title="{{ Auth::user()->hasRole('student') ? 'Student Dashboard' : 'Admin Panel' }}">
+                                <i class="{{ Auth::user()->hasRole('student') ? 'fas fa-th-large' : 'fas fa-cog' }} mr-2"></i>
+                                {{ Auth::user()->hasRole('student') ? 'Dashboard' : 'Admin Panel' }}
                             </a>
-                            @if(Auth::user()->isAdmin() || Auth::user()->isSuperAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-primary-600 transition flex items-center">
-                                <i class="fas fa-cog mr-2"></i>Admin Panel
-                            </a>
-                            @endif
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="text-gray-700 hover:text-primary-600 transition flex items-center w-full text-left">
@@ -277,24 +274,25 @@
                             <a href="{{ route('home') }}" class="flex items-center mb-4">
                                 <img src="{{ asset('logo.webp') }}" alt="Kelas Digital" class="h-10 w-auto">
                             </a>
-                            <h3 class="text-xl font-bold mb-3">Kelas Digital</h3>
+                            <h3 class="text-xl font-bold mb-3">Beautyversity.id</h3>
                             <p class="text-sm opacity-90 leading-relaxed">
-                                Platform edukasi kecantikan terpercaya di Indonesia. Belajar dari para ahli dan tingkatkan skill kecantikanmu bersama ribuan siswa lainnya.
+                                Where Beauty Meets Science. Platform edukasi kecantikan berbasis bukti dari Mahasiswa S2 Farmasi UNPAD. 
+                                Pelajari ilmu kecantikan yang benar dan aman.
                             </p>
                         </div>
                         
                         <!-- Newsletter Subscription -->
                         <div class="mt-6">
-                            <h4 class="text-sm font-semibold mb-3 uppercase tracking-wider">Stay Updated</h4>
+                            <h4 class="text-sm font-semibold mb-3 uppercase tracking-wider">Update Kecantikan</h4>
                             <form class="space-y-3" action="#" method="POST">
                                 @csrf
                                 <input type="email" 
-                                       placeholder="Masukkan email Anda" 
+                                       placeholder="Email untuk update kecantikan" 
                                        class="w-full px-4 py-3 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-70 focus:border-white transition-all duration-200"
                                        required>
                                 <button type="submit" 
                                         class="w-full bg-white text-gray-800 px-4 py-3 text-sm font-semibold rounded-lg hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
-                                    <i class="fas fa-paper-plane mr-2"></i>Subscribe
+                                    <i class="fas fa-paper-plane mr-2"></i>Daftar Update
                                 </button>
                             </form>
                         </div>
@@ -302,23 +300,26 @@
 
                     <!-- Quick Links -->
                     <div>
-                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Quick Links</h4>
+                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Navigasi</h4>
                         <ul class="space-y-3">
-                            <li><a href="{{ route('home') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Home</a></li>
-                            <li><a href="{{ route('search') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Search</a></li>
-                            <li><a href="{{ route('dashboard') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Dashboard</a></li>
+                            <li><a href="{{ route('home') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Beranda</a></li>
+                            <li><a href="{{ route('search') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Pencarian</a></li>
+                            {{-- kalo masih guest, hidden aja --}}
                             @auth
-                                <li><a href="{{ route('profile.index') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">My Profile</a></li>
+                            <li><a href="{{ Auth::user()->hasRole('student') ? route('dashboard') : route('admin.dashboard') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Dashboard</a></li>
                             @else
-                                <li><a href="{{ route('login') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Login</a></li>
-                                <li><a href="{{ route('register') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Register</a></li>
+                                <li><a href="{{ route('login') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Masuk</a></li>
+                                <li><a href="{{ route('register') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Daftar</a></li>
+                            @endauth
+                            @auth
+                                <li><a href="{{ route('profile.index') }}" class="text-sm opacity-90 hover:opacity-100 hover:text-white transition">Profil Saya</a></li>
                             @endauth
                         </ul>
                     </div>
 
                     <!-- Article Categories -->
                     <div>
-                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Artikel Populer</h4>
+                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Artikel Ilmiah</h4>
                         <ul class="space-y-3">
                             @if (isset($articleCategories))
                                 @foreach ($articleCategories->take(6) as $category)
@@ -340,7 +341,7 @@
 
                     <!-- Contact & Social -->
                     <div>
-                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Hubungi Kami</h4>
+                        <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider">Kontak & Sosial</h4>
                         <div class="space-y-4">
                             <div class="flex items-start space-x-3">
                                 <i class="fas fa-envelope text-sm mt-1"></i>
@@ -367,7 +368,7 @@
                         
                         <!-- Social Media -->
                         <div class="mt-6">
-                            <h5 class="text-sm font-semibold mb-3 uppercase tracking-wider">Follow Us</h5>
+                            <h5 class="text-sm font-semibold mb-3 uppercase tracking-wider">Ikuti Kami</h5>
                             <div class="flex space-x-4">
                                 <a href="https://www.facebook.com/beautyversitydotid" target="_blank" 
                                    class="text-white hover:text-gray-200 transition-colors duration-200">
@@ -392,16 +393,11 @@
 
                 <!-- Bottom Footer -->
                 <div class="border-t border-white border-opacity-20 pt-8">
-                    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0">
                         <div class="text-center md:text-left">
                             <p class="text-sm opacity-90">
-                                Copyright © {{ date('Y') }}, Kelas Digital. All Rights Reserved.
+                                Copyright © {{ date('Y') }}, Beautyversity.id. All Rights Reserved.
                             </p>
-                        </div>
-                        <div class="flex space-x-6 text-sm">
-                            <a href="#" class="opacity-90 hover:opacity-100 hover:text-white transition">Privacy Policy</a>
-                            <a href="#" class="opacity-90 hover:opacity-100 hover:text-white transition">Terms of Service</a>
-                            <a href="#" class="opacity-90 hover:opacity-100 hover:text-white transition">Cookie Policy</a>
                         </div>
                     </div>
                 </div>
