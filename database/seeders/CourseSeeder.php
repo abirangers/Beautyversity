@@ -24,7 +24,6 @@ class CourseSeeder extends Seeder
                 'price' => 150000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'u-kE8gRENqI',
-                'full_video_ids' => ['abc1', 'def2', 'ghi3'],
                 'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Beginner',
             ]
@@ -39,7 +38,6 @@ class CourseSeeder extends Seeder
                 'price' => 180000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['jkl4', 'mno5', 'pqr6', 'stu7'],
                 'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Intermediate',
             ]
@@ -54,7 +52,6 @@ class CourseSeeder extends Seeder
                 'price' => 200000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['vwx8', 'yz9', 'abc10', 'def11'],
                 'course_category_id' => $categoryIds['makeup'] ?? null,
                 'level' => 'Beginner',
             ]
@@ -69,7 +66,6 @@ class CourseSeeder extends Seeder
                 'price' => 120000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['ghi12', 'jkl13', 'mno14'],
                 'course_category_id' => $categoryIds['hair-care'] ?? null,
                 'level' => 'Beginner',
             ]
@@ -84,7 +80,6 @@ class CourseSeeder extends Seeder
                 'price' => 250000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['pqr15', 'stu16', 'vwx17', 'yz18', 'abc19'],
                 'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Advanced',
             ]
@@ -99,7 +94,6 @@ class CourseSeeder extends Seeder
                 'price' => 160000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['def20', 'ghi21', 'jkl22'],
                 'course_category_id' => $categoryIds['makeup'] ?? null,
                 'level' => 'Intermediate',
             ]
@@ -114,7 +108,6 @@ class CourseSeeder extends Seeder
                 'price' => 100000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['mno23', 'pqr24'],
                 'course_category_id' => $categoryIds['skincare'] ?? null,
                 'level' => 'Beginner',
             ]
@@ -129,7 +122,6 @@ class CourseSeeder extends Seeder
                 'price' => 220000,
                 'thumbnail' => 'default-course.jpg',
                 'trailer_video_id' => 'dQw4w9WgXcQ',
-                'full_video_ids' => ['stu25', 'vwx26', 'yz27', 'abc28'],
                 'course_category_id' => $categoryIds['makeup'] ?? null,
                 'level' => 'Advanced',
             ]

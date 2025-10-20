@@ -36,7 +36,10 @@ class CourseController extends Controller
         // Calculate enrolled students count
         $enrolledStudentsCount = $course->enrollments()->where('payment_status', 'completed')->count();
         
-        return view('course.show', compact('course', 'userHasAccess', 'userEnrollment', 'lessonsByModule', 'totalVideos', 'enrolledStudentsCount'));
+        // Always start with trailer video when opening course detail
+        $initialVideoId = $course->trailer_video_id;
+        
+        return view('course.show', compact('course', 'userHasAccess', 'userEnrollment', 'lessonsByModule', 'totalVideos', 'enrolledStudentsCount', 'initialVideoId'));
     }
     
     public function enroll($slug)
