@@ -19,7 +19,7 @@
         </div>
     @elseif(auth()->user()->hasRole('content-manager'))
         <!-- Dashboard khusus untuk Content Manager -->
-        <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Articles</p>
@@ -29,9 +29,36 @@
                     <i class="fas fa-file-alt text-primary-600 text-2xl"></i>
                 </div>
             </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Scheduled Articles</p>
+                    <p class="text-3xl font-bold text-yellow-600">{{ $scheduledArticles ?? 0 }}</p>
+                </div>
+                <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-yellow-100 rounded-full">
+                    <i class="fas fa-clock text-yellow-600 text-2xl"></i>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Published Today</p>
+                    <p class="text-3xl font-bold text-green-600">{{ $publishedToday ?? 0 }}</p>
+                </div>
+                <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-green-100 rounded-full">
+                    <i class="fas fa-calendar-check text-green-600 text-2xl"></i>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Ready to Publish</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ $readyToPublish ?? 0 }}</p>
+                </div>
+                <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-blue-100 rounded-full">
+                    <i class="fas fa-rocket text-blue-600 text-2xl"></i>
+                </div>
+            </div>
         </div>
     @else
-        <!-- Dashboard untuk Admin dan Content Manager -->
+        <!-- Dashboard untuk Admin dan Super Admin -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
                 <div>
@@ -70,6 +97,51 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Article Statistics Section for Admin -->
+        @if($totalArticles !== null)
+        <div class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Article Statistics</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Articles</p>
+                        <p class="text-3xl font-bold text-gray-900">{{ $totalArticles }}</p>
+                    </div>
+                    <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-primary-100 rounded-full">
+                        <i class="fas fa-file-alt text-primary-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Scheduled Articles</p>
+                        <p class="text-3xl font-bold text-yellow-600">{{ $scheduledArticles ?? 0 }}</p>
+                    </div>
+                    <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-yellow-100 rounded-full">
+                        <i class="fas fa-clock text-yellow-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Published Today</p>
+                        <p class="text-3xl font-bold text-green-600">{{ $publishedToday ?? 0 }}</p>
+                    </div>
+                    <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-green-100 rounded-full">
+                        <i class="fas fa-calendar-check text-green-600 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Ready to Publish</p>
+                        <p class="text-3xl font-bold text-blue-600">{{ $readyToPublish ?? 0 }}</p>
+                    </div>
+                    <div class="flex-shrink-0 h-14 w-14 flex items-center justify-center bg-blue-100 rounded-full">
+                        <i class="fas fa-rocket text-blue-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     @endif
 
     <div class="mt-8 bg-white rounded-lg shadow-sm overflow-hidden">
@@ -94,6 +166,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Author</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Created</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Scheduled</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -110,14 +183,33 @@
                                     {{ $article->created_at->format('d M Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Published
-                                    </span>
+                                    @if($article->status === 'published')
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Published
+                                        </span>
+                                    @elseif($article->status === 'scheduled')
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            Scheduled
+                                        </span>
+                                    @else
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            Draft
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    @if($article->status === 'scheduled' && $article->scheduled_at)
+                                        {{ $article->scheduled_at->format('d M Y H:i') }}
+                                    @elseif($article->status === 'published' && $article->published_at)
+                                        {{ $article->published_at->format('d M Y H:i') }}
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-sm text-gray-500">
+                                <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500">
                                     No recent articles found.
                                 </td>
                             </tr>
