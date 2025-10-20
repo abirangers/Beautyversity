@@ -29,14 +29,15 @@ class SearchController extends Controller
                 ->limit(12)
                 ->get();
 
-            $articles = Article::with('categories', 'tags')
+            $articles = Article::published()
+                ->with('categories', 'tags')
                 ->where(function ($query) use ($keyword) {
                     $query->where('title', 'like', "%{$keyword}%")
                         ->orWhere('excerpt', 'like', "%{$keyword}%")
                         ->orWhere('content', 'like', "%{$keyword}%")
                         ->orWhere('author', 'like', "%{$keyword}%");
                 })
-                ->orderByDesc('created_at')
+                ->orderByDesc('published_at')
                 ->limit(12)
                 ->get();
         }

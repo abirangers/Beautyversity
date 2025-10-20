@@ -26,10 +26,18 @@ class Article extends Model
         'post_type',
         'content_format',
         'slug',
+        'scheduled_at',
+        'status',
+        'published_at',
     ];
 
     protected $richTextAttributes = [
         'body',
+    ];
+
+    protected $casts = [
+        'scheduled_at' => 'datetime',
+        'published_at' => 'datetime',
     ];
 
     /**
@@ -190,10 +198,117 @@ class Article extends Model
             author: $this->author ?: 'Kelas Digital Team',
             image: $this->thumbnail ?: '/logo.webp',
             url: route('article.show', $this->slug),
-            published_time: $this->created_at,
+            published_time: $this->published_at ?? $this->created_at,
             modified_time: $this->updated_at,
             tags: $this->tagNames->toArray(),
             section: $this->categories->first()?->name,
         );
+    }
+
+    // ==================== SCHEDULING FUNCTIONALITY ====================
+
+    /**
+     * Scope to get only published articles (for public display)
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published')
+                    ->where(function ($q) {
+                        $q->whereNull('scheduled_at')
+                          ->orWhere('scheduled_at', '<=', now());
+                    });
+    }
+
+    /**
+     * Scope to get only scheduled articles
+     */
+    public function scopeScheduled($query)
+    {
+        return $query->where('status', 'scheduled')
+                    ->where('scheduled_at', '>', now());
+    }
+
+    /**
+     * Scope to get only draft articles
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', 'draft');
+    }
+
+    /**
+     * Scope to get articles ready to be published (scheduled time has passed)
+     */
+    public function scopeReadyToPublish($query)
+    {
+        return $query->where('status', 'scheduled')
+                    ->where('scheduled_at', '<=', now());
+    }
+
+    /**
+     * Check if article is published
+     */
+    public function isPublished(): bool
+    {
+        return $this->status === 'published' && 
+               ($this->scheduled_at === null || $this->scheduled_at <= now());
+    }
+
+    /**
+     * Check if article is scheduled
+     */
+    public function isScheduled(): bool
+    {
+        return $this->status === 'scheduled' && 
+               $this->scheduled_at > now();
+    }
+
+    /**
+     * Check if article is draft
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    /**
+     * Publish the article
+     */
+    public function publish(): bool
+    {
+        return $this->update([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+    }
+
+    /**
+     * Schedule the article for future publication
+     */
+    public function schedule(\DateTime $scheduledAt): bool
+    {
+        return $this->update([
+            'status' => 'scheduled',
+            'scheduled_at' => $scheduledAt,
+        ]);
+    }
+
+    /**
+     * Unschedule the article (make it draft)
+     */
+    public function unschedule(): bool
+    {
+        return $this->update([
+            'status' => 'draft',
+            'scheduled_at' => null,
+        ]);
+    }
+
+    /**
+     * Get the effective published date (published_at or created_at)
+     */
+    public function getEffectivePublishedAtAttribute(): \DateTime
+    {
+        return $this->published_at ?? $this->created_at;
     }
 }

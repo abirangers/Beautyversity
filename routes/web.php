@@ -94,6 +94,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         // Article management
         Route::middleware('can:view articles')->group(function () {
             Route::resource('articles', AdminArticleController::class);
+            Route::post('articles/{id}/publish', [AdminArticleController::class, 'publish'])->name('articles.publish');
+            Route::post('articles/{id}/unschedule', [AdminArticleController::class, 'unschedule'])->name('articles.unschedule');
         });
         
         // Article category management

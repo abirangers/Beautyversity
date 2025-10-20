@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data" x-data="{ status: '{{ old('status', 'draft') }}' }">
         @csrf
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
             <div>
@@ -107,6 +107,36 @@
                         @enderror
                     </div>
 
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                        <select name="status" id="status" required x-model="status"
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                            <option value="draft" {{ old('status', 'draft') === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Published</option>
+                            <option value="scheduled" {{ old('status') === 'scheduled' ? 'selected' : '' }}>Scheduled</option>
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Choose the publication status for this article.</p>
+                        @error('status')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div x-show="status === 'scheduled'" x-transition>
+                        <label for="scheduled_at" class="block text-sm font-medium text-gray-700 mb-2">Schedule Date & Time</label>
+                        <input type="datetime-local" name="scheduled_at" id="scheduled_at" value="{{ old('scheduled_at') }}"
+                            x-bind:required="status === 'scheduled'"
+                            x-init="if (status === 'scheduled') { 
+                                const now = new Date();
+                                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                                $el.min = now.toISOString().slice(0, 16);
+                            }"
+                            class="w-full block px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                        <p class="mt-1 text-xs text-gray-500">Select when this article should be published.</p>
+                        @error('scheduled_at')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <div class="md:col-span-2">
                         <label for="thumbnail" class="block text-sm font-medium text-gray-700 mb-2">Thumbnail</label>
                         <input type="file" name="thumbnail" id="thumbnail"
@@ -149,3 +179,4 @@
     </form>
 
 @endsection
+

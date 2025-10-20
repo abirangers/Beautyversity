@@ -32,7 +32,9 @@
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Category</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Published
+                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Published/Scheduled
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Actions
@@ -55,13 +57,50 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-700">{{ $article->created_at->format('d M Y') }}</div>
+                                @if($article->status === 'published')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Published
+                                    </span>
+                                @elseif($article->status === 'scheduled')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        Scheduled
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        Draft
+                                    </span>
+                                @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-700">
+                                    @if($article->status === 'published')
+                                        {{ $article->published_at ? $article->published_at->format('d M Y H:i') : $article->created_at->format('d M Y H:i') }}
+                                    @elseif($article->status === 'scheduled')
+                                        {{ $article->scheduled_at ? $article->scheduled_at->format('d M Y H:i') : 'N/A' }}
+                                    @else
+                                        Not published
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                 <a href="{{ route('admin.articles.show', $article->id) }}"
                                     class="text-gray-500 hover:text-gray-800">View</a>
                                 <a href="{{ route('admin.articles.edit', $article->id) }}"
                                     class="text-primary-600 hover:text-primary-800">Edit</a>
+                                
+                                @if($article->status === 'scheduled')
+                                    <form action="{{ route('admin.articles.publish', $article->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-green-600 hover:text-green-800" 
+                                                onclick="return confirm('Publish this article immediately?')">Publish</button>
+                                    </form>
+                                    <form action="{{ route('admin.articles.unschedule', $article->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-yellow-600 hover:text-yellow-800" 
+                                                onclick="return confirm('Unschedule this article?')">Unschedule</button>
+                                    </form>
+                                @endif
+                                
                                 <form action="{{ route('admin.articles.destroy', $article->id) }}" method="POST"
                                     class="inline"
                                     onsubmit="return confirm('Are you sure you want to delete this article?');">
