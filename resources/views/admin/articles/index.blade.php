@@ -45,8 +45,11 @@
                     @forelse($articles as $article)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4">
-                                <!-- hyperlink to the article public page-->
-                                <a href="{{ route('article.show', $article->slug) }}" class="text-sm font-medium text-gray-900 hover:text-primary-600 transition-colors">{{ $article->title }}</a>
+                                @if($article->isPublished())
+                                    <a href="{{ route('article.show', $article->slug) }}" class="text-sm font-medium text-gray-900 hover:text-primary-600 transition-colors">{{ $article->title }}</a>
+                                @else
+                                    <span class="text-sm font-medium text-gray-900">{{ $article->title }}</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">{{ $article->author }}</div>
@@ -57,11 +60,11 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($article->status === 'published')
+                                @if($article->isPublished())
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         Published
                                     </span>
-                                @elseif($article->status === 'scheduled')
+                                @elseif($article->isScheduled())
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                         Scheduled
                                     </span>
@@ -73,9 +76,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-700">
-                                    @if($article->status === 'published')
+                                    @if($article->isPublished())
                                         {{ $article->published_at ? $article->published_at->format('d M Y H:i') : $article->created_at->format('d M Y H:i') }}
-                                    @elseif($article->status === 'scheduled')
+                                    @elseif($article->isScheduled())
                                         {{ $article->scheduled_at ? $article->scheduled_at->format('d M Y H:i') : 'N/A' }}
                                     @else
                                         Not published
@@ -88,7 +91,7 @@
                                 <a href="{{ route('admin.articles.edit', $article->id) }}"
                                     class="text-primary-600 hover:text-primary-800">Edit</a>
                                 
-                                @if($article->status === 'scheduled')
+                                @if($article->isScheduled())
                                     <form action="{{ route('admin.articles.publish', $article->id) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="text-green-600 hover:text-green-800" 
