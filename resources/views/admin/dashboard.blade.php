@@ -183,11 +183,11 @@
                                     {{ $article->created_at->format('d M Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($article->status === 'published')
+                                    @if($article->isPublished())
                                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                             Published
                                         </span>
-                                    @elseif($article->status === 'scheduled')
+                                    @elseif($article->isScheduled())
                                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                             Scheduled
                                         </span>
@@ -198,9 +198,9 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                    @if($article->status === 'scheduled' && $article->scheduled_at)
+                                    @if($article->isScheduled())
                                         {{ $article->scheduled_at->format('d M Y H:i') }}
-                                    @elseif($article->status === 'published' && $article->published_at)
+                                    @elseif($article->isPublished())
                                         {{ $article->published_at->format('d M Y H:i') }}
                                     @else
                                         -

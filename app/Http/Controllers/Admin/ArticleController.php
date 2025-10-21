@@ -92,7 +92,7 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
             'status' => 'required|in:draft,published,scheduled',
-            'scheduled_at' => 'nullable|date|after:now|required_if:status,scheduled',
+            'scheduled_at' => 'nullable|date|after_or_equal:now|required_if:status,scheduled',
         ]);
 
         // Auto-fill author if empty (backup safety)
@@ -186,7 +186,7 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
             'status' => 'required|in:draft,published,scheduled',
-            'scheduled_at' => 'nullable|date|after:now|required_if:status,scheduled',
+            'scheduled_at' => 'nullable|date|after_or_equal:now|required_if:status,scheduled',
         ]);
 
         // Auto-fill author if empty (backup safety)
@@ -248,7 +248,7 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
         
-        if ($article->status !== 'scheduled') {
+        if (!$article->isScheduled()) {
             return redirect()->back()->with('error', 'Only scheduled articles can be published.');
         }
 
@@ -264,7 +264,7 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
         
-        if ($article->status !== 'scheduled') {
+        if (!$article->isScheduled()) {
             return redirect()->back()->with('error', 'Only scheduled articles can be unscheduled.');
         }
 
