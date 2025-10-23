@@ -180,7 +180,7 @@
                                     <div class="text-sm text-gray-900">{{ $article->author ?? 'Unknown' }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                    {{ $article->created_at->format('d M Y') }}
+                                    {{ $article->published_at->format('d M Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($article->isPublished())

@@ -16,8 +16,9 @@
             </p>
             <div class="mt-8">
                 <a href="#popular-courses"
-                    class="px-8 py-3 text-lg font-semibold text-primary-600 bg-white rounded-md hover:bg-gray-100 transition-transform transform hover:scale-105">
-                    Mulai Perjalanan Kecantikan Anda
+                    class="inline-block px-6 py-3 md:px-8 md:py-4 text-sm md:text-lg font-semibold text-primary-600 bg-white rounded-md hover:bg-gray-100 transition-transform transform hover:scale-105 shadow-lg">
+                    <span class="hidden sm:inline">Mulai Perjalanan Kecantikan Anda</span>
+                    <span class="sm:hidden">Mulai Belajar</span>
                 </a>
             </div>
         </div>

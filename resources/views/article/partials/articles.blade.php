@@ -11,7 +11,7 @@
                     {{ $primaryCategory->name }}
                 </a>
             @endif
-            <p class="text-sm text-gray-500 mb-2">{{ $article->created_at->format('F j, Y') }}</p>
+            <p class="text-sm text-gray-500 mb-2">{{ $article->published_at->format('F j, Y') }}</p>
             <h2 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
                 <a href="{{ route('article.show', $article->slug) }}" class="hover:text-primary-600 transition-colors">
                     {{ $article->title }}

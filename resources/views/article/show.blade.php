@@ -27,7 +27,7 @@
             <p class="mt-4 text-base text-gray-500">
                 Ditulis oleh <span class="font-semibold text-gray-700">{{ $article->author ?? 'Admin' }}</span>
                 <span class="mx-2">&bull;</span>
-                Dipublikasikan pada {{ $article->created_at->format('d F Y') }}
+                Dipublikasikan pada {{ $article->published_at->format('d F Y') }}
             </p>
         </div>
     </div>

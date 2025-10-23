@@ -32,7 +32,7 @@
                 <p class="mt-2 text-sm text-gray-500">
                     by <span class="font-medium text-gray-700">{{ $article->author }}</span>
                     <span class="mx-2">&bull;</span>
-                    Published on {{ $article->created_at->format('F d, Y') }}
+                    Published on {{ $article->published_at->format('F d, Y') }}
                 </p>
                 <p class="mt-1 text-xs text-gray-500">Slug: <span class="font-mono">{{ $article->slug }}</span></p>
                 <div class="mt-4 flex flex-wrap gap-4 text-sm">
