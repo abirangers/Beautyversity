@@ -287,11 +287,11 @@
                             <form class="space-y-3" action="#" method="POST">
                                 @csrf
                                 <input type="email" 
-                                       placeholder="Email untuk update kecantikan" 
-                                       class="w-full px-4 py-3 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-70 focus:border-white transition-all duration-200"
+                                       placeholder="Email untuk update" 
+                                       class="w-full px-4 py-3 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-70 focus:border-white transition-all duration-200 min-h-[48px]"
                                        required>
                                 <button type="submit" 
-                                        class="w-full bg-white text-gray-800 px-4 py-3 text-sm font-semibold rounded-lg hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+                                        class="w-full bg-white text-gray-800 px-4 py-3 text-sm font-semibold rounded-lg hover:bg-gray-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 min-h-[48px] flex items-center justify-center">
                                     <i class="fas fa-paper-plane mr-2"></i>Daftar Update
                                 </button>
                             </form>
