@@ -165,6 +165,22 @@ class ArticleController extends Controller
             ]);
         }
 
+        $article = Article::findOrFail($id);
+
+        // Build validation rules dynamically
+        $scheduledAtRules = ['nullable', 'date', 'required_if:status,scheduled'];
+        
+        // Only validate 'after_or_equal:now' if scheduled_at is being changed to a new value
+        // Compare datetime values properly to avoid format mismatch (form uses 'Y-m-d\TH:i', DB uses 'Y-m-d H:i:s')
+        if ($request->filled('scheduled_at')) {
+            $originalScheduledAt = $article->scheduled_at ? $article->scheduled_at->format('Y-m-d H:i') : null;
+            $requestScheduledAt = \Carbon\Carbon::parse($request->scheduled_at)->format('Y-m-d H:i');
+            
+            if ($requestScheduledAt !== $originalScheduledAt) {
+                $scheduledAtRules[] = 'after_or_equal:now';
+            }
+        }
+
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => [
@@ -186,15 +202,13 @@ class ArticleController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255', // Allow both existing IDs and new tag names
             'status' => 'required|in:draft,published,scheduled',
-            'scheduled_at' => 'nullable|date|after_or_equal:now|required_if:status,scheduled',
+            'scheduled_at' => $scheduledAtRules,
         ]);
 
         // Auto-fill author if empty (backup safety)
         if (empty($data['author'])) {
             $data['author'] = Auth::user()->name;
         }
-
-        $article = Article::findOrFail($id);
 
         $payload = [
             'content_format' => $data['content_format'],
